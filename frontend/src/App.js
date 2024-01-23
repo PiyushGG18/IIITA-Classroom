@@ -1,8 +1,10 @@
+import React from "react";
+import Login from "./components/login/Login";
 
 function App() {
   return (
     <>
-      <h1>IIITA Classroom</h1>
+      <Login/>
     </>
   );
 }
