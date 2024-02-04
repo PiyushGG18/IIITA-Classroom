@@ -6,103 +6,6 @@ function Login() {
   const users = ["Student", "Professor", "T.A.", "Admin"];
   return (
     <>
-      {/* <div className="flex flex-wrap min-h-screen w-full content-center justify-center bg-gray-200 py-10 ">
-        <div className="flex ">
-          <div
-            className="flex flex-wrap content-center rounded-s-3xl bg-white"
-            style={{ width: "36rem", height: "36rem" }}
-          >
-            <div className=" w-76 m-auto">
-              <h1 className="text-xl font-bold flex ">
-                <img
-                  src="./photos/Login/clgLogo.png"
-                  alt="error"
-                  className="flex flex-wrap content-center"
-                  style={{ height: "30px", width: "30px", marginRight: "6px" }}
-                />
-                IIITA Classroom
-              </h1>
-              <small className="text-gray-400">
-                Welcome back! Please enter your details
-              </small>
-
-              <form id="loginForm" className="mt-16">
-                <div className="mb-3">
-                  <label
-                    htmlFor="loginUsername"
-                    className="mb-2 block text-xs font-semibold"
-                  >
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    id="loginUsername"
-                    autoComplete="on"
-                    placeholder="Enter your username"
-                    className="block w-full rounded-md border-b border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500"
-                    required="true"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label
-                    htmlFor="loginPassword"
-                    className="mb-2 block text-xs font-semibold"
-                  >
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    id="loginPassword"
-                    autoComplete="off"
-                    placeholder="********"
-                    className="block w-full rounded-md border-b border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500"
-                    required="true"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <p className="mb-2 block text-xs font-semibold">Sign-in as</p>
-                  <Dropdown title="Sign-in as" users={users} />
-                </div>
-
-                <div className="mb-5 mt-3 flex flex-wrap content-center">
-                  <input
-                    id="remember"
-                    type="checkbox"
-                    className="mr-1 checked:bg-purple-700"
-                  />{" "}
-                  <label
-                    htmlFor="remember"
-                    className="mr-auto text-xs font-semibold"
-                  >
-                    Remember Me
-                  </label>
-                </div>
-
-                <div className="mb-3">
-                  <button className="mb-1.5  block w-full text-center text-white bg-purple-700 hover:bg-purple-900 px-2 py-1.5 rounded-md">
-                    Sign in
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <div
-            className="flex flex-wrap content-center rounded-e-3xl bg-white px-2 "
-            style={{ width: "30rem", height: "36rem" }}
-          >
-            <img
-              className=" bg-center bg-no-repeat bg-cover rounded-e-3xl flex justify-center content-center"
-              style={{ width: "24rem", height: "36rem" }}
-              src="./photos/Login/img1.svg"
-              alt="err"
-            />
-          </div>
-        </div>
-      </div> */}
-
       <main>
         <div className="box">
           <div className="inner-box">
@@ -126,32 +29,38 @@ function Login() {
                 </div>
 
                 <div className="actual-form">
-                  <div className="input-wrap">
+                  <div className="relative z-0">
                     <input
                       type="text"
-                      minlength="4"
-                      className="input-field"
-                      autocomplete="off"
-                      required
-                      placeholder="Username"
+                      id="username"
+                      className=" my-5 block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                      placeholder=" "
                     />
+                    <label
+                      for="username"
+                      className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                    >
+                      Username
+                    </label>
                   </div>
 
-                  <div className="input-wrap">
+                  <div className="relative z-0">
                     <input
                       type="password"
-                      minlength="4"
-                      className="input-field"
-                      autocomplete="off"
-                      required
-                      placeholder="Password"
+                      id="password"
+                      className="block mb-5 py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                      placeholder=" "
                     />
+                    <label
+                      for="password"
+                      className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                    >
+                      Password
+                    </label>
                   </div>
 
-                  <div className="mb-3 input-wrap flex">
-                    <div className=" mr-3 " style={{ color: "gray" }}>
-                      Sign-in as:
-                    </div>
+                  <div className="mb-6 input-wrap flex">
+                    <div className=" mr-3 text-gray-400">Sign-in as:</div>
                     <Dropdown id="signInAs" title="Sign-in as" users={users} />
                   </div>
 
