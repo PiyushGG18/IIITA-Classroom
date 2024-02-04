@@ -1,6 +1,6 @@
 import React from "react";
-import { generateDate, months } from "../../util/calendar";
-import cn from "../../util/cn";
+import { generateDate, months } from "./util/calendar";
+import cn from "./util/cn";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
