@@ -18,7 +18,7 @@ input {
     font-family: "Poppins", sans-serif;
 }
 
-main {
+.login-main {
     width: 100%;
     min-height: 100vh;
     overflow: hidden;
@@ -144,7 +144,7 @@ h4:hover {
     transition: 0.4s;
 }
 
-label {
+.login-label {
     position: absolute;
     left: 0;
     top: 50%;
@@ -379,7 +379,7 @@ main.sign-up-mode .carousel {
 }
 
 @media (max-width: 530px) {
-    main {
+    .login-main {
         padding: 1rem;
     }
 

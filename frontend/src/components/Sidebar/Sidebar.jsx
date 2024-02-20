@@ -1,113 +1,75 @@
-import { MoreVertical, ChevronLast, ChevronFirst } from "lucide-react"
-import { useContext, createContext, useState } from "react"
-import "./Sidebar.css";
-import { Button } from "@material-tailwind/react";
+import {BarChart3,LayoutDashboard,CandlestickChart, LifeBuoy, ListTodo  } from "lucide-react";
 
-const SidebarContext = createContext()
+const items=[
+  {
+      icon:<LayoutDashboard size={20} />,
+      text:"Dashboard",
+      active:"active",
+  },
+  {
+    icon:<BarChart3 size={20} />,
+    text:"Attendence",
+    active:""
+  },
+  {
+    icon:<ListTodo size={20} />,
+    text:"To do",
+    active:""
+  },
+  {
+    icon:<CandlestickChart size={20} />,
+    text:"Result",
+    active:""
+  },
+  {
+    icon:<LifeBuoy size={20} />,
+    text:"Help",
+    active:""
+  },
+]
 
-export default function Sidebar({ children }) {
-  const [expanded, setExpanded] = useState(true)
-  
+export default function Sidebar() {
+
   return (
-    <aside className="h-screen ">
-      <nav className="h-full max-w-[300px] flex flex-col bg-white border-r shadow-sm">
-        <div className="p-4 pb-2 flex justify-between items-center">
-          <div className="Logo flex space-x-6 items-center font-poppins mb-14">
-            <img src="/photos/Sidebar/IIITA_LOGO.png"/>
-            <src >IIIT-A Classroom</src>
-          </div>
-          {/* <img
-            src="https://img.logoipsum.com/243.svg"
-            className={`overflow-hidden transition-all ${
-              expanded ? "w-32" : "w-0"
-            }`}
-            alt=""
-          />
-          <button
-            onClick={() => setExpanded((curr) => !curr)}
-            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
-          >
-            {expanded ? <ChevronFirst /> : <ChevronLast />}
-          </button> */}
-        </div>
-
-        <SidebarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-3 mt-12">{children}</ul>
-        </SidebarContext.Provider>
-
-        <div className="flex p-3 items-center">
-          {/* <img
-            src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
-            alt=""
-            className="w-10 h-10 rounded-md"
-          /> */}
-          <div
-          //   className={`
-          //     flex justify-between items-center
-          //     overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
-          // `}
-          >
-            <div className="leading-4 items-center ml-12 mb-5">
-              {/* <h4 className="font-semibold">Roshan Chaudhary</h4> */}
-              <a href="#_" class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-indigo-100 border border-indigo-500 rounded-lg shadow-sm cursor-pointer hover:text-white bg-indigo-500">
-<img src="/photos/Sidebar/Icon.svg"  className="h-5 w-5 mr-3" alt="" />{/* <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns={icon}><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> */}
-<span class="relative">Join a new class</span>
-</a>
-              {/* <span className="text-xs text-gray-600">iib2021032@iiita.ac.in</span> */}
-            
-            </div>
-            {/* <MoreVertical size={20} /> */}
-          </div>
-        </div>
-      </nav>
-    </aside>
-  )
-}
-
-export function SidebarItem({ icon, text, active, alert }) {
-  const { expanded } = useContext(SidebarContext)
-  
-  return (
-    <li
-      className={`
-        relative flex items-center py-2 px-3 my-1
-        font-medium rounded-md cursor-pointer
-        transition-colors group
-        ${
-          active
-            ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-            : "hover:bg-indigo-50 text-gray-600"
-        }
-    `}
-    >
-      {icon}
-      <span
-        className={`overflow-hidden transition-all ${
-          expanded ? "w-52 ml-3" : "w-0"
-        }`}
+    <div className="w-full">
+      <div
+        className="h-full  mt-8 flex flex-col bg-white border-r shadow-sm"
       >
-        {text}
-      </span>
-      {alert && (
-        <div
-          className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
-            expanded ? "" : "top-2"
-          }`}
-        />
-      )}
+      <ul className="">
+        {items.map((item,i,items)=>(
+                <li
+                  className={`${(i+1===items.length)?"mt-24 border-t-2":""} flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
+                    item.active
+                      ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
+                      : "hover:bg-indigo-50 text-gray-600"
+                  } `}
+                >
+                  {item.icon}
+                  <span className="overflow-hidden transition-all ml-3 w-full">
+                    {item.text}
+                  </span>
+                </li>
+        ))}
+      </ul>
 
-      {!expanded && (
-        <div
-          className={`
-          absolute left-full rounded-md px-2 py-1 ml-6
-          bg-indigo-100 text-indigo-800 text-sm
-          invisible opacity-20 -translate-x-3 transition-all
-          group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
-      `}
-        >
-          {text}
+
+        <div className="mt-8 border-t flex p-3 justify-center">
+          
+          <button
+            className="bg-indigo-500 hover:text-white shadow-sm rounded-lg border-indigo-500 border text-indigo-100 text-center font-medium text-base px-5 py-3 inline-flex items-center justify-center"
+          >
+            <img
+              src="/photos/Sidebar/Icon.svg"
+              className="h-5 w-5 mr-3"
+              alt=""
+            />
+            <span class="relative flex flex-col justify-center items-center">
+              Join a new class
+            </span>
+          </button>
         </div>
-      )}
-    </li>
-  )
+      </div>
+    </div>
+  );
 }
+
