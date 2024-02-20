@@ -1,5 +1,5 @@
 
-import { MoveRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import ImageCard from "./ImageCard";
 const Image1 = "/photos/Subjects/img1.png";
 const Image2 = "/photos/Subjects/img2.png";
@@ -60,7 +60,7 @@ function Cards() {
                   {d.proffesor}
                 </div>
                 <div className=" text-white inline-flex items-center">
-                  <MoveRight />
+                  <ChevronRight />
                 </div>
               </div>
             </div>
