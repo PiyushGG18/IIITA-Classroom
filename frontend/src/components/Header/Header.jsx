@@ -18,7 +18,7 @@ function Header() {
   const {user}=useContext(UserContext)
 
   return (
-    <div className="flex h-16 border-b-2 shadow-lg items-center relative">
+    <div className=" flex h-16 border-b-2 shadow-lg items-center sticky top-0 bg-white z-10">
       {/* Sidebar span */}
       <div className=" w-[10%] h-full items-center justify-start flex md:w-[18%]">
         <div className=" flex justify-between items-center">
@@ -35,7 +35,7 @@ function Header() {
             
             className="hidden md:flex text-gray-600 text-xl mx-4"
           >
-            <span className="font-semibold ">IIITA </span> Classroom
+            <span className="font-semibold mr-2">IIITA </span>  Classroom
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import Dropdown from "./Dropdown";
 import "./login.css";
 
 function Login() {
-  const users = ["Student", "Professor", "T.A.", "Admin"];
+  const users = ["Student", "Professor",  "Admin"];
   return (
     <>
       <main className="login-main">
