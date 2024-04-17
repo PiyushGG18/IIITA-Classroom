@@ -53,7 +53,7 @@ export default function Sidebar() {
       </ul>
 
 
-        <div className="mt-8 border-t flex p-3 justify-center">
+        <div className="mt-8 border-t flex p-3 justify-center mb-40">
           
           <button
             className="bg-indigo-500 hover:text-white shadow-sm rounded-lg border-indigo-500 border text-indigo-100 text-center font-medium text-base px-5 py-3 inline-flex items-center justify-center"
