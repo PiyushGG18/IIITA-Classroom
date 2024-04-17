@@ -15,7 +15,7 @@ function SubjectInfo() {
 
   return (
     <div className="flex flex-col">
-      <div className="p-4 md:p-8 h-11/12  md:h-[50vh] flex">
+      <div className="p-4 md:p-8 h-11/12  md:h-3/6 flex">
         <div className="w-full md:w-3/4 relative bg-contain h-40 md:h-64  overflow-hidden rounded-2xl shadow-lg group  ">
           <img
             src={d.Image}
