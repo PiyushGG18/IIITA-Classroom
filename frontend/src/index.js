@@ -10,6 +10,9 @@ import {  RouterProvider, createBrowserRouter } from "react-router-dom";
 import Login from "./components/login/Login";
 import UserCard from "./components/dashboard/UserCard";
 import SubjectInfo from "./components/SubjectInfo/SubjectInfo";
+import Attendance from "./components/Attendance/Attendance";
+import ToDo from "./components/To-Do/ToDo";
+import Results from "./components/Results/Results";
 
 
 const router = createBrowserRouter([
@@ -22,16 +25,27 @@ const router = createBrowserRouter([
         element: <UserCard />,
       },
       {
-        path:"subject/:subId",
-        element: <SubjectInfo/>
-      }
-
+        path: "subject/:subId",
+        element: <SubjectInfo />,
+      },
+      {
+        path: "/attendance",
+        element: <Attendance />,
+      },
+      {
+        path: "/to-do",
+        element: <ToDo />,
+      },
+      {
+        path: "/results",
+        element: <Results />,
+      },
     ],
   },
   {
     path: "/login",
     element: <Login />,
-  }
+  },
 ]);
 
 
