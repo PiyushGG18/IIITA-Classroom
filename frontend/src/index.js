@@ -13,14 +13,16 @@ import SubjectInfo from "./components/SubjectInfo/SubjectInfo";
 import Attendance from "./components/Attendance/Attendance";
 import ToDo from "./components/To-Do/ToDo";
 import Results from "./components/Results/Results";
+import Admin from "./components/Admin/Admin"
 
 const lst=JSON.parse(localStorage.getItem('nuser'));
+const role=localStorage.getItem('role');
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: 
-    lst?<App />:<Login/>,
+    lst?(role==='Admin'? <Admin /> :<App />):<Login/>,
     children: [
       {
         path: "",
