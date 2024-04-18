@@ -32,6 +32,7 @@ function UserCard() {
                 ? item.course.professor[0].name
                 : "N/A", // Assuming professor name is stored in professor.name
           }));
+          console.log(formattedData)
 
           setData(formattedData);
 
