@@ -72,16 +72,6 @@ router.get("/dashboard",Userauthenticate, async (req, res) => {
     if(models[role] === Admin){
         user = await models[role].findOne({ email: email });
     }
-    else if(models[role]===Professor){
-        user = await models[role].findOne({ email: email }).populate({
-            path: 'courses',
-            model: 'Course', // Assuming you have a Course model set up correctly
-            // populate: {
-            //     path: 'professor',
-            //     model: 'Professor' // Further populating the professor data if needed
-            // }
-        }); 
-    }
     else{
         user = await models[role].findOne({ email: email }).populate({
             path: 'courses.course',
