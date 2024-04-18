@@ -1,27 +1,32 @@
-import React, { useState,  useContext } from "react";
+import React, { useState, useContext } from "react";
 import UserContext from "../../context/UserContext";
-import Dropdown from "./Dropdown";
 import "./login.css";
 import axios from "axios";
-import {  redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+const Image4 = "/photos/Subjects/img4.jpg";
 
 function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { setUser } = useContext(UserContext);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    signIn: "Student",
   });
   const handleInput = (e) => {
     // console.log(e.target.value)
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+    const handleSelectChange = (e) => {
+      setFormData({ ...formData, signIn: e.target.value });
+    };
+
   function handleSubmit(e) {
     e.preventDefault();
-    // console.log(formData)
     axios
       .post("http://localhost:5000/student/login", formData)
       .then((response) => {
@@ -30,12 +35,11 @@ function Login() {
           userImage: "/photos/Dashboard/dummy.jpeg",
           userEmail: response.data.student.email,
         };
-        localStorage.setItem('nuser',JSON.stringify(newUser))
+        localStorage.setItem("nuser", JSON.stringify(newUser));
         setUser(newUser);
+        console.log(formData);
 
-        console.log(response);
-        // window.location.replace("/");
-        // console.log(user);
+        window.location.replace("/");
       })
       .catch((error) => {
         console.log(error.response);
@@ -109,7 +113,21 @@ function Login() {
 
                   <div className="mb-6 input-wrap flex">
                     <div className=" mr-3 text-gray-400">Sign-in as:</div>
-                    <Dropdown id="signInAs" title="Sign-in as" users={users} />
+                    <div>
+                      <div>
+                        <select
+                          id="user"
+                          className="focus:outline-none "
+                          onChange={handleSelectChange}
+                        >
+                          {users.map((item) => (
+                            <option key={item} value={item}>
+                              {item}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
                   </div>
 
                   <button type="submit" value="Sign In" className="sign-btn">
