@@ -52,6 +52,7 @@ const StudentSchema = new mongoose.Schema({
 const AdminSchema = new mongoose.Schema({
     name: String,
     email: String,
+    password: String,
 })
 
 const ProfessorSchema = new mongoose.Schema({
