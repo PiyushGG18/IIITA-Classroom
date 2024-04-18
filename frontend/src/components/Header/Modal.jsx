@@ -18,6 +18,7 @@ export default function BasicModal() {
 
   const handleLogOut = () =>{
     localStorage.removeItem("nuser");
+    localStorage.removeItem("token");
     
      window.location.replace("/");
   }

@@ -28,16 +28,18 @@ function Login() {
   function handleSubmit(e) {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/student/login", formData)
+      .post("http://localhost:5000/user/login", formData)
       .then((response) => {
+        // console.log(response);
         const newUser = {
-          user: response.data.student.name,
+          user: response.data.user.name,
           userImage: "/photos/Dashboard/dummy.jpeg",
-          userEmail: response.data.student.email,
+          userEmail: response.data.user.email,
         };
         localStorage.setItem("nuser", JSON.stringify(newUser));
+        const token=response.data.token;
+        localStorage.setItem('token',token);
         setUser(newUser);
-        console.log(formData);
 
         window.location.replace("/");
       })
