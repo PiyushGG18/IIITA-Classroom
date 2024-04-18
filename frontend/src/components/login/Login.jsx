@@ -39,6 +39,10 @@ function Login() {
         localStorage.setItem("nuser", JSON.stringify(newUser));
         const token=response.data.token;
         localStorage.setItem('token',token);
+        const role = formData.signIn;
+        localStorage.setItem('role',role);
+        // console.log(response)
+
         setUser(newUser);
 
         window.location.replace("/");
