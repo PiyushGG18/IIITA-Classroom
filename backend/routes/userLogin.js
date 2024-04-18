@@ -64,27 +64,43 @@ router.post("/login", async (req, res) => {
 
 router.get("/dashboard",Userauthenticate, async (req, res) => {
     try {
-        const email = req.email;
-        const role = req.role;
-
+    const email = req.email;
+    const role = req.role;
+    let user;
         
         // Return the login response
-        const user = await models[role].findOne({ email: email }).populate({
-        path: 'courses.course',
-        model: 'Course', // Assuming you have a Course model set up correctly
-        // populate: {
-        //     path: 'professor',
-        //     model: 'Professor' // Further populating the professor data if needed
-        // }
-    });
-    user.password = undefined;
-
-        res.json({
-            message: 'Authorization successful',
-            user: user,
-            role: role
-        });
+    if(models[role] === Admin){
+        user = await models[role].findOne({ email: email });
+    }
+    else if(models[role]===Professor){
+        user = await models[role].findOne({ email: email }).populate({
+            path: 'courses',
+            model: 'Course', // Assuming you have a Course model set up correctly
+            // populate: {
+            //     path: 'professor',
+            //     model: 'Professor' // Further populating the professor data if needed
+            // }
+        }); 
+    }
+    else{
+        user = await models[role].findOne({ email: email }).populate({
+            path: 'courses.course',
+            model: 'Course', // Assuming you have a Course model set up correctly
+            // populate: {
+            //     path: 'professor',
+            //     model: 'Professor' // Further populating the professor data if needed
+            // }
+        });   
+    }
         
+        user.password = undefined;
+    
+            res.json({
+                message: 'Authorization successful',
+                user: user,
+                role: role
+            });
+    
 
 
     } catch (err) {
