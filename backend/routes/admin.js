@@ -122,6 +122,30 @@ router.post("/addProfessor",async (req,res)=>{
     })
 })
 
+router.post("/addAdmin",async (req,res)=>{
+    const name = req.body.name;
+    const email = req.body.email;
+    let password = req.body.password;
+    // const id = req.body.id;
+    
+    const isExist = await Admin.findOne({email:email});
+    if(isExist){
+        return res.status(400).json({
+            msg: "Admin Already Exists"
+        })
+    } 
+    const saltRounds = 10;
+    const hasedPassword = await bcrypt.hash(password,saltRounds);
+    password = hasedPassword;
+    const adminDetails = Admin.create({
+        name:name,
+        email:email,
+        password:password,
+    }) 
+    res.status(200).json({
+        msg: "Admin added successfully"
+    })
+})
 
 
 

@@ -1,6 +1,7 @@
 const {Router} = require("express");
 const router = Router();
 const bcrypt = require("bcrypt")
+const jwt = require('jsonwebtoken');
 const {Student} = require("../models/index");
 
 
@@ -11,15 +12,15 @@ try{
     const password = req.body.password;
 
     //check student exists or not
-    // const student = await Student.findOne({email: email});
-    const student = await Student.findOne({ email: email }).populate({
-        path: 'courses.course',
-        model: 'Course', // Assuming you have a Course model set up correctly
-        // populate: {
-        //     path: 'professor',
-        //     model: 'Professor' // Further populating the professor data if needed
-        // }
-    });
+    const student = await Student.findOne({email: email});
+    // const student = await Student.findOne({ email: email }).populate({
+    //     path: 'courses.course',
+    //     model: 'Course', // Assuming you have a Course model set up correctly
+    //     // populate: {
+    //     //     path: 'professor',
+    //     //     model: 'Professor' // Further populating the professor data if needed
+    //     // }
+    // });
     if(await !student){
         return res.status(400).json({
             msg: "User not exists"
@@ -33,13 +34,15 @@ try{
         
     }
     // const courses = await Student.courses
-    // const token = 
+    const token = jwt.sign({ email: email }, 'sadadsa', { expiresIn: '1h' });
     // const { password: _, ...studentData } = student.toObject();
+    
     student.password = undefined;
+    student.courses = undefined;
     res.json({
         message: 'Login successful',
         student: student.toObject({ virtuals: true }),
-        // token
+        token
     })
 } catch(err){
     res.status(500).json({message: "Server error"});
@@ -47,6 +50,11 @@ try{
 
 
 });
+
+// router.get("/",async (req,res)=>{
+
+
+// });
 
 // router.post("/add",async (req,res) =>{
 //     const name = req.body.name;
