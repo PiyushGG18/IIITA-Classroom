@@ -39,6 +39,14 @@ const CourseRecordSchema = new mongoose.Schema({
     }]
 });
 
+const CourseRecordSchema1 = new mongoose.Schema({
+    course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course'
+    }
+});
+
+
 const StudentSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
@@ -60,10 +68,7 @@ const ProfessorSchema = new mongoose.Schema({
     email: String,
     password: String,
     id: String,
-    courses: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
-    }],
+    courses: [CourseRecordSchema1],
     teachingAssistant: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Student'
