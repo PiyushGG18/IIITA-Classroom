@@ -5,6 +5,7 @@ const studentRouter = require("./routes/student");
 const adminRouter = require("./routes/admin");
 const courseRouter = require("./routes/course");
 const postRouter = require("./routes/post");
+const professorRouter = require("./routes/professor");
 // const bcrypt = require('bcrypt');
 
 
@@ -13,6 +14,7 @@ app.use("/student",studentRouter);
 app.use("/admin",adminRouter);
 app.use("/course",courseRouter);
 app.use("/post",postRouter);
+app.use("/professor",professorRouter);
 
 
 app.listen(3000,()=>{

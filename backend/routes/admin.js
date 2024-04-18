@@ -30,25 +30,71 @@ router.post("/addStudent",async (req,res)=>{
     })
 })
 
-router.post("/addStudentSubject",async (req,res) =>{
-    const courseName = req.body.courseName;
-    const courseId = req.body.courseId;
+// router.post("/addStudentSubject",async (req,res) =>{
+//     const courseName = req.body.courseName;
+//     const courseId = req.body.courseId;
+//     const email = req.headers.email;
+
+//     const courseDetails = await Course.findOne({coursename: courseName, courseid : courseId});
+//     const id = courseDetails._id;
+//     console.log(id);
+//     await Student.updateOne({
+//         email: email
+//     },{
+//         "$push":{
+//             courses: id
+//         }
+//     })
+//     res.status(200).json({
+//         msg: "Course added to user successfully"
+//     })
+
+// })
+
+router.post("/addStudentSubject", async (req, res) => {
+    const { courseName, courseId } = req.body;
     const email = req.headers.email;
 
-    const courseDetails = await Course.findOne({coursename: courseName, courseid : courseId});
-    const id = courseDetails._id;
-    await Student.updateOne({
-        email: email
-    },{
-        "$push":{
-            courses: id
+    try {
+        // Find the course details by name and ID
+        const courseDetails = await Course.findOne({ coursename: courseName, courseid: courseId });
+        if (!courseDetails) {
+            return res.status(404).json({ msg: "Course not found" });
         }
-    })
-    res.status(200).json({
-        msg: "Course added to user successfully"
-    })
 
-})
+        // Push a new course record into the student's courses array
+        const updatedStudent = await Student.findOneAndUpdate(
+            { email: email },
+            {
+                $push: {
+                    courses: {
+                        course: courseDetails._id, // References the course's ObjectId
+                        attendance: [], // Initializes the attendance array
+                        c1: [], // Initializes c1 grades array
+                        c2: [], // Initializes c2 grades array
+                        c3: []  // Initializes c3 grades array
+                    }
+                }
+            },
+            { new: true } // Option to return the updated document
+        );
+
+        if (!updatedStudent) {
+            return res.status(404).json({ msg: "Student not found" });
+        }
+
+        res.status(200).json({
+            msg: "Course added to student successfully",
+            updatedStudent
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            msg: "Failed to add course to student",
+            error: error.message
+        });
+    }
+});
 
 router.post("/addProfessor",async (req,res)=>{
     const name = req.body.name;

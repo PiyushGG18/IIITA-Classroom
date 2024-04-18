@@ -11,7 +11,15 @@ try{
     const password = req.body.password;
 
     //check student exists or not
-    const student = await Student.findOne({email: email});
+    // const student = await Student.findOne({email: email});
+    const student = await Student.findOne({ email: email }).populate({
+        path: 'courses.course',
+        model: 'Course', // Assuming you have a Course model set up correctly
+        // populate: {
+        //     path: 'professor',
+        //     model: 'Professor' // Further populating the professor data if needed
+        // }
+    });
     if(await !student){
         return res.status(400).json({
             msg: "User not exists"
@@ -24,11 +32,13 @@ try{
         })
         
     }
+    // const courses = await Student.courses
     // const token = 
-    const { password: _, ...studentData } = student.toObject();
+    // const { password: _, ...studentData } = student.toObject();
+    student.password = undefined;
     res.json({
         message: 'Login successful',
-        student: studentData,
+        student: student.toObject({ virtuals: true }),
         // token
     })
 } catch(err){
