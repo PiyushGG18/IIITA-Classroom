@@ -140,7 +140,9 @@ router.post("/addProfessorSubject", async (req, res) => {
             { email: email },
             {
                 $push: {
-                    courses: courseDetails._id
+                    courses: {
+                        course: courseDetails._id, // References the course's ObjectId
+                    }
                 }
             },
             { new: true } // Option to return the updated document
