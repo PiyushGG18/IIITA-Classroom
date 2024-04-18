@@ -14,6 +14,16 @@ export default function BasicModal() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const {user} = useContext(UserContext)
+
+
+  const handleLogOut = () =>{
+    localStorage.removeItem("nuser");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    
+     window.location.replace("/");
+  }
+
   return (
     <div>
       <Button onClick={handleOpen}>
@@ -52,7 +62,7 @@ export default function BasicModal() {
               <div class="">
                 <a href="/" class="px-4 py-2 pb-4 hover:bg-gray-100 flex">
                   <p class="text-sm font-medium mx-auto items-center text-red-600 leading-none">
-                    Logout ?
+                    <button onClick={handleLogOut}>Logout ?</button>
                   </p>
                 </a>
               </div>

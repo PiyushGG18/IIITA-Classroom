@@ -43,7 +43,6 @@ const items = [
 ];
 
 export default function Sidebar() {
-  const { user } = useContext(UserContext);
 
   return (
     <div className="w-full">
@@ -54,7 +53,7 @@ export default function Sidebar() {
               <li
                 className={`${
                   i + 1 === items.length ? "mt-24 border-t-2" : ""
-                }hover:bg-indigo-50 text-gray-600 flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group `}
+                }hover:bg-indigo-50 text-gray-600 flex items-center py-3 px-5 my-1  font-medium rounded-md cursor-pointer transition-colors group `}
 
                 // bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800
               >

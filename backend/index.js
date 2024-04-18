@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const bodyParser = require('body-parser');
 const studentRouter = require("./routes/student");
@@ -8,6 +9,7 @@ const postRouter = require("./routes/post");
 const professorRouter = require("./routes/professor");
 const userLoginRouter = require("./routes/userLogin");
 // const bcrypt = require('bcrypt');
+app.use(cors());
 
 
 app.use(bodyParser.json());
@@ -18,6 +20,6 @@ app.use("/post",postRouter);
 app.use("/professor",professorRouter);
 app.use("/user",userLoginRouter)
 
-app.listen(3000,()=>{
+app.listen(5000,()=>{
     console.log("Server started running")
 })
