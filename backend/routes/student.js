@@ -11,6 +11,7 @@ try{
     const password = req.body.password;
 
     //check student exists or not
+    // console.log(email,password)
     const student = await Student.findOne({email: email});
     if(await !student){
         return res.status(400).json({

@@ -7,12 +7,13 @@ const Image3 = "/photos/Subjects/img3.jpg";
 const Image4 = "/photos/Subjects/img4.jpg";
 const Image5 = "/photos/Subjects/img5.jpg";
 
+const lst = JSON.parse(localStorage.getItem("nuser"));
 
 const UserContextProvider=({children})=>{
     const [user,setUser]=useState({
-        user:"Roshan Chaudhary",
-        userImage:"/photos/Dashboard/dummy.jpeg",
-        userEmail:"chaudharyrhan@gmail.com",
+        user:(lst?lst.user:"Roshan Chaudhary"),
+        userImage:(lst?lst.userImage:"/photos/Dashboard/dummy.jpeg"),
+        userEmail:(lst?lst.userEmail:"chaudharyrhan@gmail.com"),
     })
 
     const data = [
