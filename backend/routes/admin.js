@@ -96,6 +96,8 @@ router.post("/addStudentSubject", async (req, res) => {
     }
 });
 
+
+
 router.post("/addProfessor",async (req,res)=>{
     const name = req.body.name;
     const email = req.body.email;
@@ -121,6 +123,46 @@ router.post("/addProfessor",async (req,res)=>{
         msg: "Professor added successfully"
     })
 })
+
+router.post("/addProfessorSubject", async (req, res) => {
+    const { courseName, courseId } = req.body;
+    const email = req.headers.email;
+
+    try {
+        // Find the course details by name and ID
+        const courseDetails = await Course.findOne({ coursename: courseName, courseid: courseId });
+        if (!courseDetails) {
+            return res.status(404).json({ msg: "Course not found" });
+        }
+
+        // Push a new course record into the student's courses array
+        const updatedStudent = await Professor.findOneAndUpdate(
+            { email: email },
+            {
+                $push: {
+                    courses: courseDetails._id
+                }
+            },
+            { new: true } // Option to return the updated document
+        );
+
+        if (!updatedStudent) {
+            return res.status(404).json({ msg: "Professor not found" });
+        }
+
+        res.status(200).json({
+            msg: "Course added to professor successfully",
+            updatedStudent
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            msg: "Failed to add course to professor",
+            error: error.message
+        });
+    }
+});
+
 
 router.post("/addAdmin",async (req,res)=>{
     const name = req.body.name;

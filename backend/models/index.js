@@ -60,7 +60,7 @@ const ProfessorSchema = new mongoose.Schema({
     email: String,
     password: String,
     id: String,
-    subjects: [{
+    courses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
     }],
