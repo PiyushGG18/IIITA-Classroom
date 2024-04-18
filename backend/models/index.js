@@ -13,47 +13,39 @@ mongoose.connect("mongodb+srv://jaydeepmeena62:qzanQm5k3KPf4wlV@iiita-classroom.
 
 //Schemas
 
-const StudentSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    rollno: {
-        type: String,
-        required: true
-    },
-    courses: [{
+const CourseRecordSchema = new mongoose.Schema({
+    course: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subject',
-        attandance: [{
-            date: String,
-            present: Boolean
-        }],
-        c1: [{
-            quiz: Number,
-            review: Number,
-            assginment: Number
-        }],
-        c2: [{
-            quiz: Number,
-            review: Number,
-            assginment: Number
-        }],
-        c3: [{
-            quiz: Number,
-            review: Number,
-            assginment: Number
-        }]
+        ref: 'Course'
+    },
+    attendance: [{
+        date: String,
+        present: Boolean
+    }],
+    c1: [{
+        quiz: Number,
+        review: Number,
+        assignment: Number
+    }],
+    c2: [{
+        quiz: Number,
+        review: Number,
+        assignment: Number
+    }],
+    c3: [{
+        quiz: Number,
+        review: Number,
+        assignment: Number
     }]
-})
+});
+
+const StudentSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    rollno: { type: String, required: true },
+    courses: [CourseRecordSchema]
+});
 
 
 
@@ -69,7 +61,7 @@ const ProfessorSchema = new mongoose.Schema({
     id: String,
     subjects: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subject'
+        ref: 'Course'
     }],
     teachingAssistant: [{
         type: mongoose.Schema.Types.ObjectId,
