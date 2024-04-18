@@ -14,11 +14,13 @@ import Attendance from "./components/Attendance/Attendance";
 import ToDo from "./components/To-Do/ToDo";
 import Results from "./components/Results/Results";
 
+const lst=JSON.parse(localStorage.getItem('nuser'));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: 
+    lst?<App />:<Login/>,
     children: [
       {
         path: "",
@@ -41,11 +43,7 @@ const router = createBrowserRouter([
         element: <Results />,
       },
     ],
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
+  }
 ]);
 
 
