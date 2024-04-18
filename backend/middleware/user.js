@@ -4,17 +4,17 @@ const secretKey = 'sadadsa';  // It's better to move this to an environment vari
 const  Userauthenticate = (req, res, next) => {
     // Retrieve the token from the Authorization header
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader) {
         return res.status(401).json({ message: 'No token provided, authorization denied' });
     }
-
-    const token = authHeader.split(' ')[1];
+    const token = authHeader;
 
     try {
         // Verify the token
         const decoded = jwt.verify(token, secretKey);
         // Attach the email from the token to the request object
         req.email = decoded.email;
+        req.role = decoded.role;
         next(); // Proceed to the next middleware or route handler
     } catch (err) {
         console.error("Authentication error:", err);
