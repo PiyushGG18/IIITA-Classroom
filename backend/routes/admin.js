@@ -131,12 +131,13 @@ router.post("/addProfessorSubject", async (req, res) => {
     try {
         // Find the course details by name and ID
         const courseDetails = await Course.findOne({ coursename: courseName, courseid: courseId });
+        const professorDetails = await Professor.findOne({ email: email });
         if (!courseDetails) {
             return res.status(404).json({ msg: "Course not found" });
         }
 
         // Push a new course record into the student's courses array
-        const updatedStudent = await Professor.findOneAndUpdate(
+        const updatedProfessor = await Professor.findOneAndUpdate(
             { email: email },
             {
                 $push: {
@@ -148,13 +149,22 @@ router.post("/addProfessorSubject", async (req, res) => {
             { new: true } // Option to return the updated document
         );
 
-        if (!updatedStudent) {
+        if (!updatedProfessor) {
             return res.status(404).json({ msg: "Professor not found" });
         }
-
+        const updatedCourse = await Course.findOneAndUpdate(
+            { coursename: courseName, courseid: courseId },
+            {
+                $push: {
+                    professor: professorDetails._id
+                }
+            },
+            { new: true } // Option to return the updated document
+        );
         res.status(200).json({
             msg: "Course added to professor successfully",
-            updatedStudent
+            updatedProfessor,
+            updatedCourse
         });
     } catch (error) {
         console.error(error);
