@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from "../Header/Header"
 
 function Admin() {
   const BASE_URL = 'http://your-backend-url.com'; // Replace with your backend URL
@@ -461,6 +462,8 @@ function Admin() {
   };
 
   return (
+    <div>
+      <Header/>
     <div className="flex flex-wrap items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 bg-gray-100 p-4">
       <button
         className="text-white font-semibold py-3 px-6 rounded-lg bg-blue-500 border border-blue-500 hover:bg-blue-600 hover:border-blue-600 transition-all duration-300 ease-out transform hover:scale-105 w-full sm:w-auto"
@@ -490,6 +493,7 @@ function Admin() {
       {showEditForm && <EditForm closeForm={() => setShowEditForm(false)} />}
       {showAdminForm && <AdminForm closeForm={() => setShowAdminForm(false)} />}
       {showDeleteForm && <DeleteForm closeForm={() => setShowDeleteForm(false)} />}
+    </div>
     </div>
   );
 }
