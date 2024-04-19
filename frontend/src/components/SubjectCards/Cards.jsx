@@ -8,11 +8,12 @@ import UserContext from "../../context/UserContext";
 
 function Cards() {
   const {data} = useContext(UserContext)
+  // console.log(data)
   return (
     <div className="flex flex-wrap mt-6 ">
       {data.map((d) => (
         <div key={d.course_name} className="p-4 w-full md:w-1/3">
-          <Link  to={`subject/${d.course}`}>
+          <Link to={`subject/${d.course}`}>
             <ImageCard imgSrc={d.Image}>
               <div className="flex flex-col justify-between rounded-lg h-full">
                 <div className="flex flex-col overflow-hidden mb-4">
@@ -25,7 +26,18 @@ function Cards() {
                 </div>
                 <div className="flex overflow-hidden">
                   <div className=" text-white inline-flex items-center mr-1">
-                    {d.proffesor}
+                    {d.professor && d.professor.length > 0 ? (
+                      <span>
+                        {d.professor.map((prof, index) => (
+                          <span key={index}>
+                            {prof.name}
+                            {index !== d.professor.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </span>
+                    ) : (
+                      <div className=" opacity-55">No professors available</div>
+                    )}
                   </div>
                   <div className=" text-white inline-flex items-center">
                     <ChevronRight />
