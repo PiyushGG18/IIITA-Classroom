@@ -94,15 +94,48 @@ const CourseSchema = new mongoose.Schema({
 
 })
 
+
+const AssignmentSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    dueDate: { type: Date, required: true },
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+    files: [{ type: String, required: false }], // URLs to files like PDFs
+    postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Professor' } // Reference to the Professor or TA
+});
+
+const SubmissionSchema = new mongoose.Schema({
+    assignment: { type: mongoose.Schema.Types.ObjectId, ref: 'Assignment', required: true },
+    student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+    submissionFile: { type: String, required: true }, // URL to the submitted file
+    submittedOn: { type: Date, default: Date.now }
+});
+
+// Embedding assignments directly in the Course Schema
+CourseSchema.add({
+    assignments: [AssignmentSchema]
+});
+
+// Student Schema modified to include submissions
+StudentSchema.add({
+    submissions: [SubmissionSchema]
+});
+
+
 const Student = mongoose.model('Student', StudentSchema)
 const Admin = mongoose.model("Admin",AdminSchema)
 const Professor = mongoose.model("Professor",ProfessorSchema)
 const Course = mongoose.model("Course",CourseSchema)
+const Assignment = mongoose.model("Assignment", AssignmentSchema);
+const Submission = mongoose.model("Submission", SubmissionSchema);
+
 
 module.exports = {
     Student,
     Admin,
     Professor,
-    Course
+    Course,
+    Assignment,
+    Submission
 }
 
