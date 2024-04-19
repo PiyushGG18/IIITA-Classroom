@@ -9,13 +9,12 @@ function Attendance() {
     <div className="flex">
     
       {data.map((d)=>(
-        <div>
-          {d.course_name}
-        </div>
-      ))}
-      <div className=" w-1/6 bg-gray-200 m-3">
+      <div className=" w-1/6 bg-gray-200 m-3 flex flex-col">
+      <div className=' font-bold flex m-2 text-gray-600 justify-center'>
+          {d.course_name}</div>
         <Charts pdata={[5,3]} />
       </div>
+      ))}
     </div>
   );
 }
