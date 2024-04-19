@@ -8,11 +8,12 @@ import UserContext from "../../context/UserContext";
 
 function Cards() {
   const {data} = useContext(UserContext)
+  // console.log(data)
   return (
     <div className="flex flex-wrap mt-6 ">
       {data.map((d) => (
         <div key={d.course_name} className="p-4 w-full md:w-1/3">
-          <Link  to={`subject/${d.course_name}`}>
+          <Link to={`subject/${d.course}`}>
             <ImageCard imgSrc={d.Image}>
               <div className="flex flex-col justify-between rounded-lg h-full">
                 <div className="flex flex-col overflow-hidden mb-4">
