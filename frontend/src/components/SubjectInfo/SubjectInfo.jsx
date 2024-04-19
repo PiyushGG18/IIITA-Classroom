@@ -1,22 +1,43 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import Calender from "../dashboard/Calender";
 import SubjectPost from "./SubjectPost";
 import Announcement from "../Announcement/Announcement"
+import axios from "axios";
 
 function SubjectInfo() {
   const { subId } = useParams();
-  const { data } = useContext(UserContext);
 
-  var d = data.find((obj) => {
-    return obj.course === subId;
-  });
-  console.log(d)
+  
+  useEffect(() => {
+    const getData = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const data = await axios.get(`http://localhost:5000/course/${subId}`, {
+            headers: {
+              authorization: token, 
+            },
+          });
+          console.log(data)
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      } else {
+        console.error("Token not found in localStorage");
+      }
+    };
+
+    getData();
+  }, []);
+  
+
+  
 
   return (
     <div className="flex flex-col">
-      <div className="p-4 md:p-8 h-11/12  md:h-4/6 flex">
+      {/* <div className="p-4 md:p-8 h-11/12  md:h-4/6 flex">
         <div className="w-full md:w-3/4 relative bg-contain h-40 md:h-64  overflow-hidden rounded-2xl shadow-lg group  ">
           <img
             src={d.Image}
@@ -38,14 +59,14 @@ function SubjectInfo() {
             <Calender />
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="flex md:h-40">
         <div className="w-full md:w-3/4 ">
           <div  >
             <Announcement subId/>
           </div>
           <div>
-          <SubjectPost sub={d}/>
+          {/* <SubjectPost sub={d}/> */}
           </div>
         </div>
         <div className="w-1/4 hidden md:flex">blank space</div>

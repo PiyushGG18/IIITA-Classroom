@@ -1,10 +1,12 @@
 import React, {useState} from 'react'
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 function Announcement(props) {
     const [showInput, setShowInput] = useState(false);
     const [inputValue, setInput] = useState("");
     const [image, setImage] = useState(null);
+    const { subId } = useParams();
 
     const handleChange = (e) => {
       if (e.target.files[0]) {
@@ -20,19 +22,27 @@ function Announcement(props) {
       const token = localStorage.getItem("token");
       
       e.preventDefault();
-      axios
-        .post(`http://localhost:5000/post/${props.subId}`, {
-          postData,
+
+      const postIt =(async ()=>{
+        await axios
+        .post(`http://localhost:5000/post/${subId}`, 
+          postData,{
           headers: {
             authorization: token, 
           },
-        })
+        },
+        )
         .then((res) => {
-          console.log(res);
+          // console.log(res);
+          window.location.reload();
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err +" "+ subId);
         });
+      })
+
+      postIt();
+      
     };
 
   return (
