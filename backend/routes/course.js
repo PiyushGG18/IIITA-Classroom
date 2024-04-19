@@ -1,5 +1,6 @@
 const {Router} = require("express");
 const { Course } = require("../models/index");
+const Userauthenticate = require("../middleware/user");
 
 const router = Router();
 
@@ -23,6 +24,16 @@ router.post("/addCourse",async (req,res)=>{
             msg: "Course added successfully"
         })
     }
+
+})
+
+router.get("/:courseid",Userauthenticate,async (req,res)=>{
+    const courseid = req.params.courseid; 
+    const CourseDetails = await Course.findOne({courseid: courseid});
+    console.log(CourseDetails);
+    res.status(200).json({
+        course: CourseDetails
+    })
 
 })
 
