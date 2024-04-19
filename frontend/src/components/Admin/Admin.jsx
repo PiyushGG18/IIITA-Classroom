@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
+import { ChevronRight } from "lucide-react";
 import Header from "../Header/Header"
+import ImageCard from "../SubjectCards/ImageCard";
 import { useEffect } from 'react'
 import axios from 'axios'
-import Cards from "../SubjectCards/Cards"
 import UserContext from "../../context/UserContext"
 import { useContext } from 'react'
 const Image4 = "/photos/Subjects/img4.jpg";
@@ -12,32 +13,37 @@ function Admin() {
   const [showCourseForm, setShowCourseForm] = useState(false);
   const [showAdminForm, setShowAdminForm] = useState(false);
 
-  const {setData} = useContext(UserContext);
+  const {data,setData} = useContext(UserContext);
 
   useEffect(() => {
     const getData = async () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const data = await axios.get("http://localhost:5000/user/Dashboard", {
+          const dat = await axios.get("http://localhost:5000/user/Dashboard", {
             headers: {
               authorization: token, // Pass the token directly, assuming it's a string
             },
           });
-          // const subData=data.data.user.courses
+          const subData=dat.data.courses
 
-          // const formattedData = subData.map((item) => ({
-          //   Image: Image4, // Assuming Image4 is defined somewhere in your code
-          //   course_name: item.course.coursename, // Assuming course name is stored in course.coursename
-          //   course: item.course.courseid, // Assuming course ID is stored in course.courseid
-          //   proffesor:
-          //     item.course.professor.length > 0
-          //       ? item.course.professor[0].name
-          //       : "N/A", // Assuming professor name is stored in professor.name
-          // }));
-          console.log(data);
-          // setData(formattedData);
-
+          const formattedData = subData.map((item) => ({
+            Image: Image4, // Assuming Image4 is defined somewhere in your code
+            course_name: item.coursename, // Assuming course name is stored in course.coursename
+            course: item.courseid, // Assuming course ID is stored in course.courseid
+            proffesor:
+              item.professor.length > 0
+                ? item.professor.map(prof => prof.name).join(', ')
+                : "N/A",
+            // posts: item.course.posts.map((post) => ({
+            //   Author: post.author,
+            //   // pfp: post.user.userImage,
+            //   date: post.date,
+            //   content: post.content,
+            // })),
+          }));
+          // console.log(formattedData);
+          setData(formattedData)
 
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -538,7 +544,32 @@ function Admin() {
       {showAdminForm && <AdminForm closeForm={() => setShowAdminForm(false)} />}
       {showDeleteForm && <DeleteForm closeForm={() => setShowDeleteForm(false)} />}
     </div>
-    <Cards/>
+    <div className="flex flex-wrap mt-6 ">
+      {data.map((d) => (
+        <div key={d.course_name} className="p-4 w-full md:w-1/3">
+            <ImageCard imgSrc={d.Image}>
+              <div className="flex flex-col justify-between rounded-lg h-full">
+                <div className="flex flex-col overflow-hidden mb-4">
+                  <h2 className=" text-white text-base md:text-lg font-bold ">
+                    {d.course_name}
+                  </h2>
+                  <p className="hidden md:flex  text-sm text-gray-300">
+                    {d.course}
+                  </p>
+                </div>
+                <div className="flex overflow-hidden">
+                  <div className=" text-white inline-flex items-center mr-1">
+                    {d.proffesor}
+                  </div>
+                  <div className=" text-white inline-flex items-center">
+                    <ChevronRight />
+                  </div>
+                </div>
+              </div>
+            </ImageCard>
+        </div>
+      ))}
+    </div>
     </div>
   );
 }
