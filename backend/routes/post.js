@@ -1,16 +1,16 @@
 const {Router} = require("express");
 const {Course, Student,Professor} = require("../models/index"); 
+const Userauthenticate = require("../middleware/user");
 const router = Router();
 
-router.post("/:course",async (req,res)=>{
-    const coursename = req.params.course;
-    const author = req.headers.name;
+router.post("/:courseid",Userauthenticate,async (req,res)=>{
+    const courseid = req.params.courseid;
+    const author = req.name;
     const content = req.body.content; 
-    console.log(coursename);
-    const CourseDetails = await Course.findOne({coursename: coursename});
+    const CourseDetails = await Course.findOne({courseid: courseid});
     console.log(CourseDetails);
     await Course.updateOne({
-        courseid: CourseDetails.courseid
+        courseid: courseid
     },{
         "$push": {
             "posts": {
