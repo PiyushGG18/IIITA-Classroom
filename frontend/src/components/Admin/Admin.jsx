@@ -1,10 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import Header from "../Header/Header"
+import { useEffect } from 'react'
+import axios from 'axios'
+import Cards from "../SubjectCards/Cards"
+import UserContext from "../../context/UserContext"
+import { useContext } from 'react'
+const Image4 = "/photos/Subjects/img4.jpg";
 
 function Admin() {
   const BASE_URL = 'http://your-backend-url.com'; // Replace with your backend URL
   const [showCourseForm, setShowCourseForm] = useState(false);
   const [showAdminForm, setShowAdminForm] = useState(false);
+
+  const {setData} = useContext(UserContext);
+
+  useEffect(() => {
+    const getData = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const data = await axios.get("http://localhost:5000/user/Dashboard", {
+            headers: {
+              authorization: token, // Pass the token directly, assuming it's a string
+            },
+          });
+          // const subData=data.data.user.courses
+
+          // const formattedData = subData.map((item) => ({
+          //   Image: Image4, // Assuming Image4 is defined somewhere in your code
+          //   course_name: item.course.coursename, // Assuming course name is stored in course.coursename
+          //   course: item.course.courseid, // Assuming course ID is stored in course.courseid
+          //   proffesor:
+          //     item.course.professor.length > 0
+          //       ? item.course.professor[0].name
+          //       : "N/A", // Assuming professor name is stored in professor.name
+          // }));
+          console.log(data);
+          // setData(formattedData);
+
+
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      } else {
+        console.error("Token not found in localStorage");
+      }
+    };
+
+    getData();
+  }, []);
 
   const CourseForm = ({ closeForm }) => {
     const [formState, setFormState] = useState({
@@ -494,6 +538,7 @@ function Admin() {
       {showAdminForm && <AdminForm closeForm={() => setShowAdminForm(false)} />}
       {showDeleteForm && <DeleteForm closeForm={() => setShowDeleteForm(false)} />}
     </div>
+    <Cards/>
     </div>
   );
 }
