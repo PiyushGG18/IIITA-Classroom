@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Header from "../Header/Header"
-import Cards from "../SubjectCards/Cards"
 
 function Admin() {
   const BASE_URL = 'http://your-backend-url.com'; // Replace with your backend URL
@@ -13,22 +12,35 @@ function Admin() {
       courseId: '',
       professorName: '',
       professorId: '',
+      courseImage: null, // New state for course image
     });
 
     const handleInputChange = (event, field) => {
       setFormState({ ...formState, [field]: event.target.value });
     };
 
+    const handleImageChange = (event) => {
+      const imageFile = event.target.files[0];
+      setFormState({ ...formState, courseImage: imageFile });
+    };
+
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
+        const formData = new FormData();
+        formData.append('courseName', formState.courseName);
+        formData.append('courseId', formState.courseId);
+        formData.append('professorName', formState.professorName);
+        formData.append('professorId', formState.professorId);
+        if (formState.courseImage) {
+          formData.append('courseImage', formState.courseImage);
+        }
+
         const response = await fetch(`${BASE_URL}/courses`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formState),
+          body: formData,
         });
+
         if (!response.ok) {
           throw new Error('Failed to create class');
         }
@@ -60,6 +72,16 @@ function Admin() {
                   onChange={(e) => handleInputChange(e, 'courseName')}
                   className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
+                />
+              </div>
+              {/* Add input field for image upload */}
+              <div>
+                <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -324,23 +346,36 @@ function Admin() {
       courseName: '',
       courseId: '',
       professorName: '',
-      professorId: ''
+      professorId: '',
+      courseImage: null, // New state for course image
     });
 
     const handleInputChange = (event, field) => {
       setFormState({ ...formState, [field]: event.target.value });
     };
 
+    const handleImageChange = (event) => {
+      const imageFile = event.target.files[0];
+      setFormState({ ...formState, courseImage: imageFile });
+    };
+
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
+        const formData = new FormData();
+        formData.append('courseName', formState.courseName);
+        formData.append('courseId', formState.courseId);
+        formData.append('professorName', formState.professorName);
+        formData.append('professorId', formState.professorId);
+        if (formState.courseImage) {
+          formData.append('courseImage', formState.courseImage);
+        }
+
         const response = await fetch(`${BASE_URL}/courses/${formState.courseId}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formState),
+          body: formData,
         });
+
         if (!response.ok) {
           throw new Error('Failed to edit class');
         }
@@ -372,6 +407,16 @@ function Admin() {
                   onChange={(e) => handleInputChange(e, 'courseName')}
                   className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
+                />
+              </div>
+              {/* Add input field for image upload */}
+              <div>
+                <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -449,7 +494,6 @@ function Admin() {
       {showAdminForm && <AdminForm closeForm={() => setShowAdminForm(false)} />}
       {showDeleteForm && <DeleteForm closeForm={() => setShowDeleteForm(false)} />}
     </div>
-    <Cards/>
     </div>
   );
 }
