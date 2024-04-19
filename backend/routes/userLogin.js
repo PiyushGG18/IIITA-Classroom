@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken');
 const {Student} = require("../models/index");
 const {Professor} = require("../models/index");
-const {Admin} = require("../models/index");
+const {Admin, Course} = require("../models/index");
 const Userauthenticate = require("../middleware/user");
 
 
@@ -62,36 +62,95 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.get("/dashboard",Userauthenticate, async (req, res) => {
-    try {
-    const email = req.email;
-    const role = req.role;
-    let user;
+// router.get("/dashboard",Userauthenticate, async (req, res) => {
+//     try {
+//     const email = req.email;
+//     const role = req.role;
+//     let user;
         
-        // Return the login response
-    if(models[role] === Admin){
-        user = await models[role].findOne({ email: email });
-    }
-    else{
-        user = await models[role].findOne({ email: email }).populate({
-            path: 'courses.course',
-            model: 'Course', // Assuming you have a Course model set up correctly
-            // populate: {
-            //     path: 'professor',
-            //     model: 'Professor' // Further populating the professor data if needed
-            // }
-        });   
-    }
+//         // Return the login response
+//     if(models[role] === Admin){
+//         user = await models[role].findOne({ email: email });
+//     }
+//     else{
+//         user = await models[role].findOne({ email: email }).populate({
+//             path: 'courses.course',
+//             model: 'Course', // Assuming you have a Course model set up correctly
+//             populate: {
+//                 path: 'professor',
+//                 model: 'Professor' // Further populating the professor data if needed
+//             }
+//         });   
+//     }
         
-        user.password = undefined;
+//         user.password = undefined;
+//         // for (const course of user.courses) {
+//         //     for(const prof of course.professor)
+//         //     prof.password = undefined;
+//         // }
+//         if (user.courses) {
+//             user.courses.forEach(course => {
+//                 if (course.course && course.course.professor) {
+//                    for(const prof of course.course.professor)
+//                     prof.password = undefined;
+//                 }
+//             });
+//         }
+
     
-            res.json({
-                message: 'Authorization successful',
-                user: user,
-                role: role
-            });
+//             res.json({
+//                 message: 'Authorization successful',
+//                 user: user,
+//                 role: role
+//             });
     
 
+
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ message: "Server error", error: err.message });
+//     }
+// });
+
+
+router.get("/dashboard", Userauthenticate, async (req, res) => {
+    try {
+        const { email, role } = req;
+        let user;
+
+        if (role === 'Admin') {
+            // For Admins: Fetch all courses and exclude 'posts' from the course details
+            const courses = await Course.find({}).select('-posts').populate({
+                path: 'professor',
+                select: 'name email'  // Selecting only name and email from professor details
+            });
+            user = await Admin.findOne({ email: email }).select('-password'); // Excluding password from the admin details
+            res.json({
+                message: 'Dashboard data',
+                role,
+                user,
+                courses  // Send all courses without posts information
+            });
+        } else {
+            // For Professors and Students: Fetch user details with populated courses
+            user = await models[role].findOne({ email: email }).populate({
+                path: 'courses.course',
+                model: 'Course',
+                select: 'coursename courseid',  // Exclude posts from the course details
+                populate: {
+                    path: 'professor',
+                    model: 'Professor',
+                    select: '-password'  // Exclude professor's password
+                }
+            });
+            user.password = undefined;  // Ensure password is not sent
+
+            res.json({
+                message: 'Authorization successful',
+                user,
+                role
+            });
+        }
 
     } catch (err) {
         console.error(err);
