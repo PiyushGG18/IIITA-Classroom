@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
+import axios from 'axios';
 
-function Announcement() {
+function Announcement(props) {
     const [showInput, setShowInput] = useState(false);
     const [inputValue, setInput] = useState("");
     const [image, setImage] = useState(null);
@@ -11,8 +12,27 @@ function Announcement() {
       }
     };
 
-    const handleUpload = () => {
-      // Jaydeep upload logic here
+    const handleUpload = (e) => {
+
+      const postData={
+        content:inputValue,
+      }
+      const token = localStorage.getItem("token");
+      
+      e.preventDefault();
+      axios
+        .post(`http://localhost:5000/post/${props.subId}`, {
+          postData,
+          headers: {
+            authorization: token, 
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     };
 
   return (
@@ -23,7 +43,7 @@ function Announcement() {
             <div>
               <textarea
                 id="announcement-input"
-                className="w-full h-40 p-2 border border-gray-300 rounded-md focus:outline-none resize-none"
+                className="w-full h-40  border border-gray-300 rounded-md focus:outline-none resize-none"
                 placeholder="Announce Something to class"
                 value={inputValue}
                 onChange={(e) => setInput(e.target.value)}

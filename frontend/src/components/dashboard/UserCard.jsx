@@ -30,7 +30,13 @@ function UserCard() {
             proffesor:
               item.course.professor.length > 0
                 ? item.course.professor[0].name
-                : "N/A", // Assuming professor name is stored in professor.name
+                : "N/A",
+            posts: item.course.posts.map((post) => ({
+              Author: post.author,
+              // pfp: post.user.userImage,
+              date: post.date,
+              content: post.content,
+            })),
           }));
           console.log(formattedData)
 

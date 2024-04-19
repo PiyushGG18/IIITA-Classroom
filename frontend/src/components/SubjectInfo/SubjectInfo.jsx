@@ -10,12 +10,13 @@ function SubjectInfo() {
   const { data } = useContext(UserContext);
 
   var d = data.find((obj) => {
-    return obj.course_name === subId;
+    return obj.course === subId;
   });
+  console.log(d)
 
   return (
     <div className="flex flex-col">
-      <div className="p-4 md:p-8 h-11/12  md:h-3/6 flex">
+      <div className="p-4 md:p-8 h-11/12  md:h-4/6 flex">
         <div className="w-full md:w-3/4 relative bg-contain h-40 md:h-64  overflow-hidden rounded-2xl shadow-lg group  ">
           <img
             src={d.Image}
@@ -38,13 +39,14 @@ function SubjectInfo() {
           </div>
         </div>
       </div>
-      <div className="flex">
+      <div className="flex md:h-40">
         <div className="w-full md:w-3/4 ">
-          <div >
-            <Announcement/>
+          <div  >
+            <Announcement subId/>
           </div>
           <div>
-          <SubjectPost /></div>
+          <SubjectPost sub={d}/>
+          </div>
         </div>
         <div className="w-1/4 hidden md:flex">blank space</div>
       </div>
