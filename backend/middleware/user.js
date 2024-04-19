@@ -15,6 +15,7 @@ const  Userauthenticate = (req, res, next) => {
         // Attach the email from the token to the request object
         req.email = decoded.email;
         req.role = decoded.role;
+        req.name = decoded.name;
         next(); // Proceed to the next middleware or route handler
     } catch (err) {
         console.error("Authentication error:", err);

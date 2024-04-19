@@ -3,7 +3,7 @@ const router = Router();
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken');
 const {Student} = require("../models/index");
-
+const { Course,Submission } = require('../models/index'); // Adjust path as needed
 
 // Student routes
 router.post("/login",async (req,res) =>{
@@ -51,27 +51,58 @@ try{
 
 });
 
-// router.get("/",async (req,res)=>{
 
 
-// });
+// Route for a student to submit an assignment
+router.post('/assignments/:assignmentId/submissions', async (req, res) => {
+    try {
+        const { assignmentId } = req.params;
+        const { submissionFile } = req.body; // URL to the submitted file, assumed to be pre-uploaded
+        // const id=req.body.id;
+        // Create a new submission
+        const submission = new Submission({
+            assignment: assignmentId,
+            student: req.body.id, // Assuming req.user is populated from a middleware
+            submissionFile
+        });
 
-// router.post("/add",async (req,res) =>{
-//     const name = req.body.name;
-//     const email = req.body.email;
-//     const password = req.body.password;
-//     const rollno = req.body.rollno;
-    
-//     await Student.create({
-//         name:name,
-//         email:email,
-//         password:password,
-//         rollno: rollno
-//     })
-//     res.status(200).json({
-//         msg: "Student added successfully"
-//     })
+        // Save the submission
+        await submission.save();
 
-// });
+        // Optionally update student's document with the submission record
+        await Student.findByIdAndUpdate(req.body.id, {
+            $push: { submissions: submission }
+        });
+
+        res.status(201).json({ message: 'Submission successful', submission });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to submit assignment", error: err.message });
+    }
+});
+
+
+// Route to get all assignments for a course
+router.get('/courses/:courseId/assignments', async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        
+        // Find the course with its assignments
+        const course = await Course.findById(courseId).populate({
+            path: 'assignments',
+            populate: { path: 'postedBy', select: 'name email' }  // Populate details of the person who posted the assignments
+        });
+
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+
+        res.json({ message: 'Assignments retrieved successfully', assignments: course.assignments });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to retrieve assignments", error: err.message });
+    }
+});
+
 
 module.exports = router
