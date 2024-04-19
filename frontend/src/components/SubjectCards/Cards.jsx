@@ -26,18 +26,7 @@ function Cards() {
                 </div>
                 <div className="flex overflow-hidden">
                   <div className=" text-white inline-flex items-center mr-1">
-                    {d.professor && d.professor.length > 0 ? (
-                      <span>
-                        {d.professor.map((prof, index) => (
-                          <span key={index}>
-                            {prof.name}
-                            {index !== d.professor.length - 1 && ", "}
-                          </span>
-                        ))}
-                      </span>
-                    ) : (
-                      <div className=" opacity-55">No professors available</div>
-                    )}
+                    {d.proffesor}
                   </div>
                   <div className=" text-white inline-flex items-center">
                     <ChevronRight />

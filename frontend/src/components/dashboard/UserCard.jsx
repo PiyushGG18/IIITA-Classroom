@@ -29,16 +29,16 @@ function UserCard() {
             course: item.course.courseid, // Assuming course ID is stored in course.courseid
             proffesor:
               item.course.professor.length > 0
-                ? item.course.professor[0].name
+                ? item.course.professor.map(prof => prof.name).join(', ')
                 : "N/A",
-            posts: item.course.posts.map((post) => ({
-              Author: post.author,
-              // pfp: post.user.userImage,
-              date: post.date,
-              content: post.content,
-            })),
+            // posts: item.course.posts.map((post) => ({
+            //   Author: post.author,
+            //   // pfp: post.user.userImage,
+            //   date: post.date,
+            //   content: post.content,
+            // })),
           }));
-          console.log(formattedData)
+          // console.log(formattedData)
 
           setData(formattedData);
 

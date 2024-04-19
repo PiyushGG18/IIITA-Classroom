@@ -11,7 +11,7 @@ function SubjectPost(props) {
   const subPosts = props.sub.posts;
 
   const temp = subPosts ? [...subPosts].reverse() : [];
-  // console.log(subPosts)
+  // console.log(temp)
   return (
     <>
       {temp.length > 0?
@@ -26,7 +26,7 @@ function SubjectPost(props) {
               />
               <div className="flex flex-col justify-center">
                 <div className="text-sm font-bold text-gray-600">
-                  {post.Author}
+                  {post.author}
                 </div>
                 <div className="text-xs text-gray-400">{post.date}</div>
               </div>
