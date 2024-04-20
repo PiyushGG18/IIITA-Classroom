@@ -83,6 +83,7 @@ const CourseSchema = new mongoose.Schema({
     courseid: String,
     posts:[{
         author: { type: String, required: true },
+        authorImage: { type: String, required: false },
         date: { type: Date, default: Date.now },
         content: { type: String, required: true },
         fileUrl: { type: String, required: false }
