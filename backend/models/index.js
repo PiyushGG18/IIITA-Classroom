@@ -52,7 +52,8 @@ const StudentSchema = new mongoose.Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },
     rollno: { type: String, required: true },
-    courses: [CourseRecordSchema]
+    courses: [CourseRecordSchema],
+    image: { type: String, required: false }
 });
 
 
@@ -61,6 +62,7 @@ const AdminSchema = new mongoose.Schema({
     name: String,
     email: String,
     password: String,
+    image: { type: String, required: false }
 })
 
 const ProfessorSchema = new mongoose.Schema({
@@ -68,6 +70,7 @@ const ProfessorSchema = new mongoose.Schema({
     email: String,
     password: String,
     id: String,
+    image: { type: String, required: false },
     courses: [CourseRecordSchema1],
     teachingAssistant: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -79,13 +82,10 @@ const CourseSchema = new mongoose.Schema({
     coursename: String,
     courseid: String,
     posts:[{
-        author: String,
-        date: String,
-        content: String
-        // comments: [{
-            // user: String,
-            // comment: String
-        // }]
+        author: { type: String, required: true },
+        date: { type: Date, default: Date.now },
+        content: { type: String, required: true },
+        fileUrl: { type: String, required: false }
     }],
     professor: [{
         type: mongoose.Schema.Types.ObjectId,

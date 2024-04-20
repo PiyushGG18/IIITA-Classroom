@@ -1,3 +1,6 @@
+require('dotenv').config();
+const multer = require('multer');
+const upload = multer();
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -8,6 +11,7 @@ const courseRouter = require("./routes/course");
 const postRouter = require("./routes/post");
 const professorRouter = require("./routes/professor");
 const userLoginRouter = require("./routes/userLogin");
+
 // const bcrypt = require('bcrypt');
 app.use(cors());
 
