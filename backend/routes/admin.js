@@ -1,35 +1,61 @@
+// const AWS = require('aws-sdk');
+// const multer = require('multer');
+// const multerS3 = require('multer-s3');
 const {Router} = require("express") 
 const { Admin, Student, Professor,Course } = require("../models/index")
 const router = Router();
 const bcrypt = require('bcrypt');
+const upload = require('../middleware/Upload');
 
+
+// const s3 = new AWS.S3({
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//     region: process.env.AWS_REGION
+// });
+// const upload = multer({
+//     storage: multerS3({
+//         s3: s3,
+//         bucket: process.env.AWS_BUCKET_NAME,
+//         // acl: 'public-read',
+//         metadata: function (req, file, cb) {
+//             cb(null, { fieldName: file.fieldname });
+//         },
+//         key: function (req, file, cb) {
+//             const extension = file.originalname.split('.').pop();
+//             cb(null, `${req.params.type}-${Date.now().toString()}.${extension}`);
+//         }
+//     })
+// });
+// const upload = multer();
 // Admin router
-router.post("/addStudent",async (req,res)=>{
-    const name=req.body.name;
-    const email=req.body.email;
-    let password = req.body.password;
-    const rollno = req.body.rollno;
+router.post("/addStudent", upload.single('image'), async (req, res) => {
+    console.log(req.file);
+    const { name, email, password, rollno } = req.body;
+    const imageUrl = req.file ? req.file.location : null;  // Use the uploaded file URL
 
-    const isExist = await Student.findOne({email:email})
-    if(isExist){
-        return res.status(400).json({
-            msg: "Student already exists"
-        })
+    const isExist = await Student.findOne({ email: email });
+    if (isExist) {
+        return res.status(400).json({ msg: "Student already exists" });
     }
-    const saltRounds = 10;
-    const hasedPassword =  await bcrypt.hash(password,saltRounds);
-    password = hasedPassword;
-    const studentDetails = await Student.create({
-        name:name,
-        email:email,
-        password: password,
-        rollno: rollno        
-    })
-    res.status(200).json({
-        msg:"Student added successfully"
-    })
-})
 
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const studentDetails = await Student.create({
+        name,
+        email,
+        password: hashedPassword,
+        rollno,
+        image: imageUrl
+    });
+
+    studentDetails.password = undefined;
+    res.status(200).json({
+        msg: "Student added successfully",
+        studentDetails
+    });
+});
 // router.post("/addStudentSubject",async (req,res) =>{
 //     const courseName = req.body.courseName;
 //     const courseId = req.body.courseId;
@@ -98,31 +124,32 @@ router.post("/addStudentSubject", async (req, res) => {
 
 
 
-router.post("/addProfessor",async (req,res)=>{
-    const name = req.body.name;
-    const email = req.body.email;
-    let password = req.body.password;
-    const id = req.body.id;
-    
-    const isExist = await Professor.findOne({email:email,id:id});
-    if(isExist){
-        return res.status(400).json({
-            msg: "Professor Already Exists"
-        })
-    } 
+router.post("/addProfessor", upload.single('image'), async (req, res) => {
+    const { name, email, password, id } = req.body;
+    const imageUrl = req.file ? req.file.location : null;
+
+    const isExist = await Professor.findOne({ email: email, id: id });
+    if (isExist) {
+        return res.status(400).json({ msg: "Professor already exists" });
+    }
+
     const saltRounds = 10;
-    const hasedPassword = await bcrypt.hash(password,saltRounds);
-    password = hasedPassword;
-    const professorDetails = Professor.create({
-        id:id,
-        name:name,
-        email:email,
-        password:password,
-    }) 
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const professorDetails = await Professor.create({
+        id,
+        name,
+        email,
+        password: hashedPassword,
+        image: imageUrl
+    });
+
+    professorDetails.password = undefined;
     res.status(200).json({
-        msg: "Professor added successfully"
-    })
-})
+        msg: "Professor added successfully",
+        professorDetails
+    });
+});
 
 router.post("/addProfessorSubject", async (req, res) => {
     const { courseName, courseId } = req.body;
