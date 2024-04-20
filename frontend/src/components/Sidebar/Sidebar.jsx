@@ -6,7 +6,7 @@ import {
   LifeBuoy,
   ListTodo,
 } from "lucide-react";
-import { NavLink, useMatch, useMatches } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 
 const items = [
@@ -43,13 +43,17 @@ const items = [
 ];
 
 export default function Sidebar() {
-
+  const {setExpand} = useContext(UserContext)
   return (
     <div className="w-full">
       <div className="h-full  mt-8 flex flex-col bg-white border-r shadow-sm">
         <ul className="">
           {items.map((item, i, items) => (
-            <NavLink to={`/${item.link}`} className="">
+            <NavLink
+              to={`/${item.link}`}
+              className=""
+              onClick={() => setExpand((curr) => !curr)}
+            >
               <li
                 className={`${
                   i + 1 === items.length ? "mt-24 border-t-2" : ""
@@ -66,7 +70,7 @@ export default function Sidebar() {
           ))}
         </ul>
 
-        <div className="mt-8 border-t flex p-3 justify-center mb-40">
+        {/* <div className="mt-8 border-t flex p-3 justify-center mb-40">
           <button className="bg-indigo-500 hover:text-white shadow-sm rounded-lg border-indigo-500 border text-indigo-100 text-center font-medium text-base px-5 py-3 inline-flex items-center justify-center">
             <img
               src="/photos/Sidebar/Icon.svg"
@@ -77,7 +81,7 @@ export default function Sidebar() {
               Join a new class
             </span>
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
