@@ -16,12 +16,14 @@ router.post("/:courseid", Userauthenticate, upload.single('file'), async (req, r
         return res.status(404).json({msg: "Course not found"});
     }
     const authorDetails = await Professor.findOne({email: authorEmail});
+    const authorImage = authorDetails.image;
     await Course.updateOne(
         { courseid: courseid },
         {
             "$push": {
                 "posts": {
                     author: author,
+                    authorImage: authorImage,
                     content: content,
                     date: new Date().toISOString(),
                     fileUrl: fileUrl // Include the file URL in the posts array
@@ -29,7 +31,7 @@ router.post("/:courseid", Userauthenticate, upload.single('file'), async (req, r
             }
         }
     );
-    const authorImage = authorDetails.image;
+    
     res.status(200).json({
         msg: "Post added successfully",
         post: {
