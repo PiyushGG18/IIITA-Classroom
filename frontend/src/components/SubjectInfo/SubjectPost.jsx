@@ -11,7 +11,7 @@ function SubjectPost(props) {
   const subPosts = props.sub.posts;
 
   const temp = subPosts ? [...subPosts].reverse() : [];
-  // console.log(temp)
+  console.log(props.sub)
   return (
     <>
       {temp.length > 0?
