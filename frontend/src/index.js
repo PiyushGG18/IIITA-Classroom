@@ -14,6 +14,9 @@ import Attendance from "./components/Attendance/Attendance";
 import ToDo from "./components/To-Do/ToDo";
 import Results from "./components/Results/Results";
 import Admin from "./components/Admin/Admin"
+import TakeAttendance from "./components/Attendance/TakeAttendance";
+import FormAttendance from "./components/Attendance/FormAttendance";
+import ViewAttendance from "./components/Attendance/ViewAttendance"
 
 const lst=JSON.parse(localStorage.getItem('nuser'));
 const role=localStorage.getItem('role');
@@ -21,8 +24,7 @@ const role=localStorage.getItem('role');
 const router = createBrowserRouter([
   {
     path: "/",
-    element: 
-    lst?(role==='Admin'? <Admin /> :<App />):<Login/>,
+    element: lst ? role === "Admin" ? <Admin /> : <App /> : <Login />,
     children: [
       {
         path: "",
@@ -33,19 +35,29 @@ const router = createBrowserRouter([
         element: <SubjectInfo />,
       },
       {
-        path: "/attendance",
-        element: <Attendance />,
-      },
-      {
-        path: "/to-do",
+        path: "to-do",
         element: <ToDo />,
       },
       {
-        path: "/results",
+        path: "results",
         element: <Results />,
       },
     ],
-  }
+  },
+  {
+    path: "/attendance",
+    element: <App />,
+    children: [
+      {
+        path: "",
+        element: role === "Professor" ? <TakeAttendance /> : <Attendance />,
+      },
+      {
+        path: ":subId",
+        element: role === "Professor" ? <FormAttendance /> : <ViewAttendance />,
+      },
+    ],
+  },
 ]);
 
 

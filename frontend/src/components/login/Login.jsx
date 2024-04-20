@@ -33,7 +33,7 @@ function Login() {
         // console.log(response);
         const newUser = {
           user: response.data.user.name,
-          userImage: "/photos/Dashboard/dummy.jpeg",
+          userImage: response.data.user.image,
           userEmail: response.data.user.email,
         };
         localStorage.setItem("nuser", JSON.stringify(newUser));

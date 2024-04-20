@@ -1,12 +1,11 @@
 import React, { useContext, useEffect } from "react";
-import Charts from "../Charts/Charts";
 import UserContext from "../../context/UserContext";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Image4 = "/photos/Subjects/img4.jpg";
 
-function Attendance() {
+function TakeAttendance() {
   const { data, setData } = useContext(UserContext);
 
   useEffect(() => {
@@ -16,27 +15,20 @@ function Attendance() {
         try {
           const data = await axios.get("http://localhost:5000/user/Dashboard", {
             headers: {
-              authorization: token, // Pass the token directly, assuming it's a string
+              authorization: token,
             },
           });
           const subData = data.data.user.courses;
 
           const formattedData = subData.map((item) => ({
-            Image: Image4, // Assuming Image4 is defined somewhere in your code
-            course_name: item.course.coursename, // Assuming course name is stored in course.coursename
-            course: item.course.courseid, // Assuming course ID is stored in course.courseid
+            Image: Image4,
+            course_name: item.course.coursename,
+            course: item.course.courseid,
             proffesor:
               item.course.professor.length > 0
                 ? item.course.professor.map((prof) => prof.name).join(", ")
                 : "N/A",
-            // posts: item.course.posts.map((post) => ({
-            //   Author: post.author,
-            //   // pfp: post.user.userImage,
-            //   date: post.date,
-            //   content: post.content,
-            // })),
           }));
-          // console.log(formattedData)
 
           setData(formattedData);
         } catch (error) {
@@ -51,20 +43,29 @@ function Attendance() {
   }, []);
 
   return (
-    <div className="flex flex-wrap">
-      {data.map((d) => (
+    <div className="flex flex-wrap justify-center absolute">
+      {data.map((d, index) => (
         <div
-          key={d.course}
-          className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 bg-gray-200 m-3 flex flex-col p-2"
+          key={index}
+          className="w-64 bg-white rounded-lg shadow-md m-4 overflow-hidden"
         >
-          <div className="font-bold flex m-1 text-gray-600 justify-center">
-            {d.course_name}
+          <img
+            src={d.Image}
+            alt="Course"
+            className="w-full h-32 object-cover"
+          />
+          <div className="p-4">
+            <h2 className="text-xl font-semibold text-gray-800">
+              {d.course_name}
+            </h2>
+            <p className="text-sm text-gray-600 mt-2">
+              Professor: {d.proffesor}
+            </p>
           </div>
-          <Charts pdata={[5, 3]} />
-          <div className="p-2 ">
+          <div className="p-4 ">
             <Link to={`/attendance/${d.course}`} className="block w-full">
               <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 transition duration-300 ease-in-out">
-                View Attendance
+                Take Attendance
               </button>
             </Link>
           </div>
@@ -74,4 +75,4 @@ function Attendance() {
   );
 }
 
-export default Attendance;
+export default TakeAttendance;

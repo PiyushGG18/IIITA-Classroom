@@ -1,11 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import { ChevronRight } from "lucide-react";
 import Header from "../Header/Header"
-import Cards from "../SubjectCards/Cards"
+import ImageCard from "../SubjectCards/ImageCard";
+import { useEffect } from 'react'
+import axios from 'axios'
+import UserContext from "../../context/UserContext"
+import { useContext } from 'react'
+const Image4 = "/photos/Subjects/img4.jpg";
 
 function Admin() {
   const BASE_URL = 'http://your-backend-url.com'; // Replace with your backend URL
   const [showCourseForm, setShowCourseForm] = useState(false);
   const [showAdminForm, setShowAdminForm] = useState(false);
+
+  const {data,setData} = useContext(UserContext);
+
+  useEffect(() => {
+    const getData = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const dat = await axios.get("http://localhost:5000/user/Dashboard", {
+            headers: {
+              authorization: token, // Pass the token directly, assuming it's a string
+            },
+          });
+          const subData=dat.data.courses
+
+          const formattedData = subData.map((item) => ({
+            Image: Image4, // Assuming Image4 is defined somewhere in your code
+            course_name: item.coursename, // Assuming course name is stored in course.coursename
+            course: item.courseid, // Assuming course ID is stored in course.courseid
+            proffesor:
+              item.professor.length > 0
+                ? item.professor.map(prof => prof.name).join(', ')
+                : "N/A",
+            // posts: item.course.posts.map((post) => ({
+            //   Author: post.author,
+            //   // pfp: post.user.userImage,
+            //   date: post.date,
+            //   content: post.content,
+            // })),
+          }));
+          // console.log(formattedData);
+          setData(formattedData)
+
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      } else {
+        console.error("Token not found in localStorage");
+      }
+    };
+
+    getData();
+  }, []);
 
   const CourseForm = ({ closeForm }) => {
     const [formState, setFormState] = useState({
@@ -13,22 +62,35 @@ function Admin() {
       courseId: '',
       professorName: '',
       professorId: '',
+      courseImage: null, // New state for course image
     });
 
     const handleInputChange = (event, field) => {
       setFormState({ ...formState, [field]: event.target.value });
     };
 
+    const handleImageChange = (event) => {
+      const imageFile = event.target.files[0];
+      setFormState({ ...formState, courseImage: imageFile });
+    };
+
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
+        const formData = new FormData();
+        formData.append('courseName', formState.courseName);
+        formData.append('courseId', formState.courseId);
+        formData.append('professorName', formState.professorName);
+        formData.append('professorId', formState.professorId);
+        if (formState.courseImage) {
+          formData.append('courseImage', formState.courseImage);
+        }
+
         const response = await fetch(`${BASE_URL}/courses`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formState),
+          body: formData,
         });
+
         if (!response.ok) {
           throw new Error('Failed to create class');
         }
@@ -60,6 +122,16 @@ function Admin() {
                   onChange={(e) => handleInputChange(e, 'courseName')}
                   className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
+                />
+              </div>
+              {/* Add input field for image upload */}
+              <div>
+                <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -324,23 +396,36 @@ function Admin() {
       courseName: '',
       courseId: '',
       professorName: '',
-      professorId: ''
+      professorId: '',
+      courseImage: null, // New state for course image
     });
 
     const handleInputChange = (event, field) => {
       setFormState({ ...formState, [field]: event.target.value });
     };
 
+    const handleImageChange = (event) => {
+      const imageFile = event.target.files[0];
+      setFormState({ ...formState, courseImage: imageFile });
+    };
+
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
+        const formData = new FormData();
+        formData.append('courseName', formState.courseName);
+        formData.append('courseId', formState.courseId);
+        formData.append('professorName', formState.professorName);
+        formData.append('professorId', formState.professorId);
+        if (formState.courseImage) {
+          formData.append('courseImage', formState.courseImage);
+        }
+
         const response = await fetch(`${BASE_URL}/courses/${formState.courseId}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formState),
+          body: formData,
         });
+
         if (!response.ok) {
           throw new Error('Failed to edit class');
         }
@@ -372,6 +457,16 @@ function Admin() {
                   onChange={(e) => handleInputChange(e, 'courseName')}
                   className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
+                />
+              </div>
+              {/* Add input field for image upload */}
+              <div>
+                <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -449,7 +544,32 @@ function Admin() {
       {showAdminForm && <AdminForm closeForm={() => setShowAdminForm(false)} />}
       {showDeleteForm && <DeleteForm closeForm={() => setShowDeleteForm(false)} />}
     </div>
-    <Cards/>
+    <div className="flex flex-wrap mt-6 ">
+      {data.map((d) => (
+        <div key={d.course_name} className="p-4 w-full md:w-1/3">
+            <ImageCard imgSrc={d.Image}>
+              <div className="flex flex-col justify-between rounded-lg h-full">
+                <div className="flex flex-col overflow-hidden mb-4">
+                  <h2 className=" text-white text-base md:text-lg font-bold ">
+                    {d.course_name}
+                  </h2>
+                  <p className="hidden md:flex  text-sm text-gray-300">
+                    {d.course}
+                  </p>
+                </div>
+                <div className="flex overflow-hidden">
+                  <div className=" text-white inline-flex items-center mr-1">
+                    {d.proffesor}
+                  </div>
+                  <div className=" text-white inline-flex items-center">
+                    <ChevronRight />
+                  </div>
+                </div>
+              </div>
+            </ImageCard>
+        </div>
+      ))}
+    </div>
     </div>
   );
 }
