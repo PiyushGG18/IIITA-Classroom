@@ -10,6 +10,7 @@ router.post("/addCourse",async (req,res)=>{
     const courseId = req.body.courseId;
     const professorName = req.body.professorName;
     const professorId = req.body.professorId;
+    const courseImage = req.body.courseImage;
     const professorDetails = await Professor.findOne({id : professorId});
     console.log(professorDetails);
     const isExist = await Course.findOne({courseid : courseId});
@@ -22,6 +23,7 @@ router.post("/addCourse",async (req,res)=>{
         const CourseDetails = Course.create({
             coursename: courseName,
             courseid : courseId,
+            courseImage:courseImage,
             professor: professorDetails._id
         })
         res.status(200).json({
