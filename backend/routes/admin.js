@@ -88,7 +88,7 @@ router.post("/addStudentSubject", async (req, res) => {
             return res.status(404).json({ msg: "Course not found" });
         }
 
-        // Push a new course record into the student's courses array
+        // Find the student and add the course to their record
         const updatedStudent = await Student.findOneAndUpdate(
             { email: email },
             {
@@ -96,9 +96,8 @@ router.post("/addStudentSubject", async (req, res) => {
                     courses: {
                         course: courseDetails._id, // References the course's ObjectId
                         attendance: [], // Initializes the attendance array
-                        c1: [], // Initializes c1 grades array
-                        c2: [], // Initializes c2 grades array
-                        c3: []  // Initializes c3 grades array
+                        midSem: [], 
+                        endSem: []
                     }
                 }
             },
@@ -109,6 +108,12 @@ router.post("/addStudentSubject", async (req, res) => {
             return res.status(404).json({ msg: "Student not found" });
         }
 
+        // Add the student's ID to the course's students array
+        await Course.updateOne(
+            { _id: courseDetails._id },
+            { $addToSet: { students: updatedStudent._id } } // Use $addToSet to avoid duplicates
+        );
+        updatedStudent.password = undefined;
         res.status(200).json({
             msg: "Course added to student successfully",
             updatedStudent
@@ -121,6 +126,7 @@ router.post("/addStudentSubject", async (req, res) => {
         });
     }
 });
+
 
 
 

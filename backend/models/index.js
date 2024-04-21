@@ -22,17 +22,12 @@ const CourseRecordSchema = new mongoose.Schema({
         date: String,
         present: Boolean
     }],
-    c1: [{
+    midSem: [{
         quiz: Number,
         review: Number,
         assignment: Number
     }],
-    c2: [{
-        quiz: Number,
-        review: Number,
-        assignment: Number
-    }],
-    c3: [{
+    endSem: [{
         quiz: Number,
         review: Number,
         assignment: Number
@@ -92,6 +87,10 @@ const CourseSchema = new mongoose.Schema({
     professor: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Professor'
+    }],
+    students: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Student'
     }]
 
 })
