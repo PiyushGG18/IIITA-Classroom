@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import axios from 'axios'
 import UserContext from "../../context/UserContext"
 import { useContext } from 'react'
+
 const Image1 = "/photos/Subjects/img1.jpg";
 const Image2 = "/photos/Subjects/img2.jpg";
 const Image3 = "/photos/Subjects/img3.jpg";
@@ -30,8 +31,9 @@ function Admin() {
             },
           });
           const subData = dat.data.courses;
+          // console.log(subData);
           const formattedData = subData.map((item) => ({
-            Image: Image4, // Assuming Image4 is defined somewhere in your code
+            Image: item.courseImage, // Assuming Image4 is defined somewhere in your code
             course_name: item.coursename, // Assuming course name is stored in course.coursename
             course: item.courseid, // Assuming course ID is stored in course.courseid
             proffesor: item.professor.length > 0
@@ -54,6 +56,7 @@ function Admin() {
     const [formState, setFormState] = useState({
       courseName: '',
       courseId: '',
+      courseImage: '',
       professorName: '',
       professorId: '' // Updated to store selected image option
     });
@@ -78,6 +81,7 @@ function Admin() {
         console.log('Form submitted:', formState);
         alert('Class created successfully!');
         closeForm();
+        window.location.reload();
       } catch (error) {
         console.error('Error:', error);
         alert('Failed to create class');
