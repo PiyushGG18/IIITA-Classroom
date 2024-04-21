@@ -1,37 +1,79 @@
 const {Router} = require("express");
-const { Course, Professor } = require("../models/index");
+const { Course, Professor, Student } = require("../models/index");
 const Userauthenticate = require("../middleware/user");
 
 const router = Router();
 
 
-router.post("/addCourse",async (req,res)=>{
-    const courseName = req.body.courseName;
-    const courseId = req.body.courseId;
-    const professorName = req.body.professorName;
-    const professorId = req.body.professorId;
-    const courseImage = req.body.courseImage;
-    const professorDetails = await Professor.findOne({id : professorId});
-    console.log(professorDetails);
-    const isExist = await Course.findOne({courseid : courseId});
-    if(isExist){
-        return res.status(400).json({
-            msg: "Course already exists"
-        })
-    }
-    else{
-        const CourseDetails = Course.create({
-            coursename: courseName,
-            courseid : courseId,
-            courseImage:courseImage,
-            professor: professorDetails._id
-        })
-        res.status(200).json({
-            msg: "Course added successfully"
-        })
-    }
 
-})
+router.post("/addCourse", async (req, res) => {
+    const { courseName, courseId, professors } = req.body;
+
+    try {
+        const isExist = await Course.findOne({ courseid: courseId });
+        if (isExist) {
+            return res.status(400).json({ msg: "Course already exists" });
+        }
+
+        const professorIds = await Promise.all(professors.map(async (professor) => {
+            const professorDetails = await Professor.findOne({ id: professor.id });
+            if (!professorDetails) {
+                throw new Error(`Professor with ID ${professor.id} not found`);
+            }
+            return professorDetails._id;
+        }));
+
+        const courseDetails = await Course.create({
+            coursename: courseName,
+            courseid: courseId,
+            professor: professorIds
+        });
+        // console.log(courseDetails);
+        await Promise.all(professors.map(async (professor) => {
+            const professorDetails = await Professor.findOne({ id: professor.id });
+            if (!professorDetails) {
+                throw new Error(`Professor with ID ${professor.id} not found`);
+            }
+            await Professor.findByIdAndUpdate(professorDetails._id, { $push: { courses: {
+                course: courseDetails._id,
+            } } });
+            
+        }));
+        res.status(200).json({ msg: "Course added successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Failed to add course", error: error.message });
+    }
+});
+
+router.delete("/deleteCourse/:courseId", async (req, res) => {
+    const { courseId } = req.params;
+
+    try {
+        const course = await Course.findOne({ courseid: courseId });
+        if (!course) {
+            return res.status(404).json({ msg: "Course not found" });
+        }
+
+        await Course.deleteOne({ courseid: courseId });
+
+        await Student.updateMany(
+            { 'courses.course': course._id },
+            { $pull: { courses: { course: course._id } } }
+        );
+
+        await Professor.updateMany(
+            { 'courses.course': course._id },
+            { $pull: { courses: { course: course._id } } }
+        );
+
+        res.status(200).json({ msg: "Course deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Failed to delete course", error: error.message });
+    }
+});
+
 
 router.get("/:courseid", Userauthenticate, async (req, res) => {
     const courseid = req.params.courseid;
