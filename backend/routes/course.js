@@ -5,6 +5,7 @@ const Userauthenticate = require("../middleware/user");
 const router = Router();
 
 
+
 router.post("/addCourse", async (req, res) => {
     const { courseName, courseId, professors } = req.body;
 

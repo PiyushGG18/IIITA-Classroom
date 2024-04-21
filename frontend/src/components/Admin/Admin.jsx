@@ -6,7 +6,12 @@ import { useEffect } from 'react'
 import axios from 'axios'
 import UserContext from "../../context/UserContext"
 import { useContext } from 'react'
+
+const Image1 = "/photos/Subjects/img1.jpg";
+const Image2 = "/photos/Subjects/img2.jpg";
+const Image3 = "/photos/Subjects/img3.jpg";
 const Image4 = "/photos/Subjects/img4.jpg";
+const Image5 = "/photos/Subjects/img5.jpg";
 
 function Admin() {
   const BASE_URL = 'http://your-backend-url.com'; // Replace with your backend URL
@@ -25,26 +30,17 @@ function Admin() {
               authorization: token, // Pass the token directly, assuming it's a string
             },
           });
-          const subData=dat.data.courses
-
+          const subData = dat.data.courses;
+          // console.log(subData);
           const formattedData = subData.map((item) => ({
-            Image: Image4, // Assuming Image4 is defined somewhere in your code
+            Image: item.courseImage, // Assuming Image4 is defined somewhere in your code
             course_name: item.coursename, // Assuming course name is stored in course.coursename
             course: item.courseid, // Assuming course ID is stored in course.courseid
-            proffesor:
-              item.professor.length > 0
-                ? item.professor.map(prof => prof.name).join(', ')
-                : "N/A",
-            // posts: item.course.posts.map((post) => ({
-            //   Author: post.author,
-            //   // pfp: post.user.userImage,
-            //   date: post.date,
-            //   content: post.content,
-            // })),
+            proffesor: item.professor.length > 0
+              ? item.professor.map(prof => prof.name).join(', ')
+              : "N/A",
           }));
-          // console.log(formattedData);
-          setData(formattedData)
-
+          setData(formattedData);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -60,43 +56,32 @@ function Admin() {
     const [formState, setFormState] = useState({
       courseName: '',
       courseId: '',
+      courseImage: '',
       professorName: '',
-      professorId: '',
-      courseImage: null, // New state for course image
+      professorId: '' // Updated to store selected image option
     });
 
     const handleInputChange = (event, field) => {
       setFormState({ ...formState, [field]: event.target.value });
     };
 
-    const handleImageChange = (event) => {
-      const imageFile = event.target.files[0];
-      setFormState({ ...formState, courseImage: imageFile });
-    };
-
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
-        const formData = new FormData();
-        formData.append('courseName', formState.courseName);
-        formData.append('courseId', formState.courseId);
-        formData.append('professorName', formState.professorName);
-        formData.append('professorId', formState.professorId);
-        if (formState.courseImage) {
-          formData.append('courseImage', formState.courseImage);
-        }
-
-        const response = await fetch(`${BASE_URL}/courses`, {
+        const response = await fetch(`http://localhost:5000/course/addCourse`, {
           method: 'POST',
-          body: formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formState),
         });
-
         if (!response.ok) {
           throw new Error('Failed to create class');
         }
         console.log('Form submitted:', formState);
         alert('Class created successfully!');
         closeForm();
+        window.location.reload();
       } catch (error) {
         console.error('Error:', error);
         alert('Failed to create class');
@@ -124,15 +109,22 @@ function Admin() {
                   required
                 />
               </div>
-              {/* Add input field for image upload */}
+              {/* Replace file input with dropdown menu */}
               <div>
                 <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
+                <select
+                  value={formState.courseImage}
+                  onChange={(e) => handleInputChange(e, 'courseImage')}
                   className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                  required
+                >
+                  <option value="">Select Image</option>
+                  <option value={Image1}>Image 1</option>
+                  <option value={Image2}>Image 2</option>
+                  <option value={Image3}>Image 3</option>
+                  <option value={Image4}>Image 4</option>
+                  <option value={Image5}>Image 5</option>
+                </select>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-600 block mb-2">Course ID</label>
@@ -165,9 +157,7 @@ function Admin() {
                 />
               </div>
               <div className="flex justify-end mt-6">
-                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-200 ease-in-out transform hover:-translate-y-1">
-                  Submit
-                </button>
+                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">Create Course</button>
               </div>
             </form>
           </div>
@@ -397,47 +387,23 @@ function Admin() {
       courseId: '',
       professorName: '',
       professorId: '',
-      courseImage: null, // New state for course image
+      courseImage: '', // Updated to store selected image option
     });
-
+  
     const handleInputChange = (event, field) => {
       setFormState({ ...formState, [field]: event.target.value });
     };
-
-    const handleImageChange = (event) => {
-      const imageFile = event.target.files[0];
-      setFormState({ ...formState, courseImage: imageFile });
-    };
-
+  
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
-        const formData = new FormData();
-        formData.append('courseName', formState.courseName);
-        formData.append('courseId', formState.courseId);
-        formData.append('professorName', formState.professorName);
-        formData.append('professorId', formState.professorId);
-        if (formState.courseImage) {
-          formData.append('courseImage', formState.courseImage);
-        }
-
-        const response = await fetch(`${BASE_URL}/courses/${formState.courseId}`, {
-          method: 'PUT',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to edit class');
-        }
-        console.log('Form submitted:', formState);
-        alert('Class edited successfully!');
-        closeForm();
+        // Your form submission logic
       } catch (error) {
         console.error('Error:', error);
         alert('Failed to edit class');
       }
     };
-
+  
     return (
       <div className="fixed inset-0 flex justify-center items-center z-50">
         <div className="bg-gray-700 bg-opacity-50 w-full h-full flex justify-center items-center">
@@ -459,15 +425,22 @@ function Admin() {
                   required
                 />
               </div>
-              {/* Add input field for image upload */}
+              {/* Replace file input with dropdown menu */}
               <div>
                 <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
+                <select
+                  value={formState.courseImage}
+                  onChange={(e) => handleInputChange(e, 'courseImage')}
                   className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                  required
+                >
+                  <option value="">Select Image</option>
+                  <option value={Image1}>Image 1</option>
+                  <option value={Image2}>Image 2</option>
+                  <option value={Image3}>Image 3</option>
+                  <option value={Image4}>Image 4</option>
+                  <option value={Image5}>Image 5</option>
+                </select>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-600 block mb-2">Course ID</label>
@@ -510,6 +483,7 @@ function Admin() {
       </div>
     );
   };
+  
 
   return (
     <div>

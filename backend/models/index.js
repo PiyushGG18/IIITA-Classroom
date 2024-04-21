@@ -81,6 +81,7 @@ const ProfessorSchema = new mongoose.Schema({
 const CourseSchema = new mongoose.Schema({
     coursename: String,
     courseid: String,
+    courseImage: String,
     posts:[{
         author: { type: String, required: true },
         authorImage: { type: String, required: false },
