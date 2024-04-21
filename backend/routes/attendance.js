@@ -34,4 +34,51 @@ router.get("/:courseId", professorauthenticate ,async (req, res) => {
     }
 });
 
+router.post('/:courseId', async (req, res) => {
+    console.log(req.body);
+    const { courseId } = req.params;
+    const attendanceData = req.body.attendanceData; // Correctly accessing attendanceData
+
+    if (!Array.isArray(attendanceData)) {
+        return res.status(400).json({ message: 'Invalid input format, expected an array of attendance records' });
+    }
+    const courseDetails = await Course.findOne({ courseid: courseId });
+    // Student.findOne({ "rollno": "iib2021023", "courses.course": "BA111" })
+    // .then(doc => console.log(doc))
+    // .catch(err => console.error(err));
+
+    try {
+        const bulkOps = attendanceData.map(attendance => {
+            return {
+                updateOne: {
+                    filter: { "rollno": attendance.rollno, "courses.course": courseDetails._id },
+                    update: {
+                        $push: {
+                            "courses.$.attendance": {
+                                date: attendance.date,
+                                present: attendance.status === "true" // Ensure conversion from string to boolean
+                            }
+                        }
+                    }
+                }
+            };
+        });
+
+        const result = await Student.bulkWrite(bulkOps, { ordered: false });
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ message: 'No students or courses found with given IDs' });
+        }
+
+        res.status(200).json({
+            message: 'Attendance marked successfully for all students',
+            details: result
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating attendance', error: error.message });
+    }
+});
+
+
 module.exports = router;
