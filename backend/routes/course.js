@@ -1,5 +1,5 @@
 const {Router} = require("express");
-const { Course } = require("../models/index");
+const { Course, Professor } = require("../models/index");
 const Userauthenticate = require("../middleware/user");
 
 const router = Router();
@@ -8,7 +8,11 @@ const router = Router();
 router.post("/addCourse",async (req,res)=>{
     const courseName = req.body.courseName;
     const courseId = req.body.courseId;
-    
+    const professorName = req.body.professorName;
+    const professorId = req.body.professorId;
+    const courseImage = req.body.courseImage;
+    const professorDetails = await Professor.findOne({id : professorId});
+    console.log(professorDetails);
     const isExist = await Course.findOne({courseid : courseId});
     if(isExist){
         return res.status(400).json({
@@ -18,7 +22,9 @@ router.post("/addCourse",async (req,res)=>{
     else{
         const CourseDetails = Course.create({
             coursename: courseName,
-            courseid : courseId
+            courseid : courseId,
+            courseImage:courseImage,
+            professor: professorDetails._id
         })
         res.status(200).json({
             msg: "Course added successfully"
