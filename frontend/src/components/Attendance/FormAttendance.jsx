@@ -1,37 +1,45 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 function FormAttendance({ onSubmitAttendance }) {
-  // Dummy user data
-  const users = [
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "Jane Smith" },
-    { id: 3, name: "Alice Johnson" },
-    { id: 4, name: "Bob Brown" },
-    { id: 5, name: "Emma Davis" },
-    { id: 6, name: "Michael Wilson" },
-    { id: 7, name: "Olivia Martinez" },
-    { id: 8, name: "William Anderson" },
-    { id: 9, name: "Sophia Taylor" },
-    { id: 10, name: "James Thomas" },
-    { id: 11, name: "Emily Jackson" },
-    { id: 12, name: "Benjamin White" },
-    { id: 13, name: "Isabella Harris" },
-    { id: 14, name: "Alexander Martin" },
-    { id: 15, name: "Mia Thompson" },
-    { id: 16, name: "Ethan Garcia" },
-    { id: 17, name: "Charlotte Martinez" },
-    { id: 18, name: "Daniel Rodriguez" },
-    { id: 19, name: "Amelia Brown" },
-    { id: 20, name: "Jacob Wilson" },
-    { id: 21, name: "Liam Taylor" },
-    { id: 22, name: "Ava Anderson" },
-    { id: 23, name: "Logan Miller" },
-    { id: 24, name: "Sophia Harris" },
-    { id: 25, name: "Mason Davis" },
-    // Add more dummy data here if needed
-  ];
-
+  const { subId } = useParams();
+  const [users, setUsers] = useState([]);
   const [attendance, setAttendance] = useState({});
+
+  useEffect(() => {
+    const getData = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const data = await axios.get(
+            `http://localhost:5000/markAttendance/${subId}`,
+            {
+              headers: {
+                authorization: token,
+              },
+            }
+          );
+          const sortedUsers = data.data.students.sort((a, b) => {
+            return a.rollno.localeCompare(b.rollno); // Sort by roll number in ascending order
+          });
+          setUsers(sortedUsers);
+          // Initialize attendance status as false for all users
+          const initialAttendance = sortedUsers.reduce((acc, user) => {
+            acc[user._id] = false;
+            return acc;
+          }, {});
+          setAttendance(initialAttendance);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      } else {
+        console.error("Token not found in localStorage");
+      }
+    };
+
+    getData();
+  }, [subId]);
 
   // Function to handle toggle of attendance
   const handleToggleAttendance = (userId) => {
@@ -42,9 +50,32 @@ function FormAttendance({ onSubmitAttendance }) {
   };
 
   // Function to handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSubmitAttendance(attendance);
+    const currentDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    const attendanceData = Object.entries(attendance).map(
+      ([userId, status]) => ({
+        roll: users.find((user) => user._id === userId).rollno,
+        status,
+        date: currentDate, // Add current date to each attendance object
+      })
+    );
+    try {
+      await axios.post(
+        `http://localhost:5000/markAttendance/${subId}`,
+        attendanceData,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Attendance data submitted successfully:", attendanceData);
+      // Call the onSubmitAttendance callback if needed
+    } catch (error) {
+      console.error("Error submitting attendance:", error);
+    }
   };
 
   return (
@@ -58,18 +89,18 @@ function FormAttendance({ onSubmitAttendance }) {
       <div className="grid grid-cols-1 gap-4">
         {users.map((user) => (
           <div
-            key={user.id}
+            key={user._id}
             className="flex items-center p-4 bg-gray-100 rounded-lg"
           >
             <input
               type="checkbox"
-              id={user.id}
-              checked={attendance[user.id] || false}
-              onChange={() => handleToggleAttendance(user.id)}
+              id={user._id}
+              checked={attendance[user._id] || false}
+              onChange={() => handleToggleAttendance(user._id)}
               className="form-checkbox h-5 w-5 text-blue-600 mr-4"
             />
-            <label htmlFor={user.id} className="text-gray-800">
-              {user.name}
+            <label htmlFor={user._id} className="text-gray-800">
+              {user.rollno}
             </label>
           </div>
         ))}
