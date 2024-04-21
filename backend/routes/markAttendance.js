@@ -34,7 +34,7 @@ router.get("/:courseId", professorauthenticate ,async (req, res) => {
     }
 });
 
-router.post('/:courseId', async (req, res) => {
+router.post('/:courseId', professorauthenticate,async (req, res) => {
     console.log(req.body);
     const { courseId } = req.params;
     const attendanceData = req.body.attendanceData; // Correctly accessing attendanceData
