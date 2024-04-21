@@ -1,6 +1,7 @@
 const {Router} = require("express");
 const { Course, Professor, Student } = require("../models/index");
 const Userauthenticate = require("../middleware/user");
+const e = require("express");
 
 const router = Router();
 
@@ -46,6 +47,52 @@ router.post("/addCourse", async (req, res) => {
         res.status(500).json({ msg: "Failed to add course", error: error.message });
     }
 });
+
+// router.post("/updateCourse/:courseId", async (req, res) => {
+//     const { courseId } = req.params;
+//     const { courseName,professors,courseImage } = req.body;
+
+//     try {
+//         const isExist = await Course.findOne({ courseid: courseId });
+//         if (isExist) {
+//             const professorIds = await Promise.all(professors.map(async (professor) => {
+//                 const professorDetails = await Professor.findOne({ id: professor.id });
+//                 if (!professorDetails) {
+//                     throw new Error(`Professor with ID ${professor.id} not found`);
+//                 }
+//                 return professorDetails._id;
+//             }));
+    
+//             const courseDetails = await Course.findByIdAndUpdate({
+//                 coursename: courseName,
+//                 courseid: courseId,
+//                 courseImage:courseImage,
+//                 professor: professorIds
+//             });
+//             // console.log(courseDetails);
+//             await Promise.all(professors.map(async (professor) => {
+//                 const professorDetails = await Professor.findOne({ id: professor.id });
+//                 if (!professorDetails) {
+//                     throw new Error(`Professor with ID ${professor.id} not found`);
+//                 }
+//                 await Professor.findByIdAndUpdate(professorDetails._id, { $push: { courses: {
+//                     course: courseDetails._id,
+//                 } } });
+                
+//             }));
+//             res.status(200).json({ msg: "Course updated successfully" });
+//         }else{
+//             return res.status(404).json({ msg: "Course not found" });
+//         }
+
+        
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ msg: "Failed to add course", error: error.message });
+//     }
+// });
+
+
 
 router.delete("/deleteCourse/:courseId", async (req, res) => {
     const { courseId } = req.params;
