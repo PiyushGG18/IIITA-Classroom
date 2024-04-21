@@ -22,10 +22,10 @@ function UserCard() {
             },
           });
           const subData=data.data.user.courses
-          console.log(subData)
+          // console.log(subData)
 
           const formattedData = subData.map((item) => ({
-            Image: item.courseImage, // Assuming Image4 is defined somewhere in your code
+            Image: item.course.courseImage, // Assuming Image4 is defined somewhere in your code
             course_name: item.course.coursename, // Assuming course name is stored in course.coursename
             course: item.course.courseid, // Assuming course ID is stored in course.courseid
             proffesor:
@@ -41,7 +41,7 @@ function UserCard() {
           }));
           // console.log(formattedData)
 
-          // setData(formattedData);
+          setData(formattedData);
 
 
         } catch (error) {
