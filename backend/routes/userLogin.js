@@ -136,7 +136,7 @@ router.get("/dashboard", Userauthenticate, async (req, res) => {
             user = await models[role].findOne({ email: email }).populate({
                 path: 'courses.course',
                 model: 'Course',
-                select: 'coursename courseid',  // Exclude posts from the course details
+                select: 'coursename courseid courseImage',  // Exclude posts from the course details
                 populate: {
                     path: 'professor',
                     model: 'Professor',
