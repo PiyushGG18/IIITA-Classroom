@@ -27,7 +27,7 @@ function SubjectInfo() {
           const d=data.data.course;
           setSub(d);
 
-          console.log(data)
+          // console.log(data)
 
         } catch (error) {
           console.error("Error fetching data:", error);

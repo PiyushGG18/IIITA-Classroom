@@ -21,8 +21,8 @@ function UserCard() {
               authorization: token, // Pass the token directly, assuming it's a string
             },
           });
-          console.log(data)
           const subData=data.data.user.courses
+          console.log(subData)
 
           const formattedData = subData.map((item) => ({
             Image: item.courseImage, // Assuming Image4 is defined somewhere in your code
