@@ -7,7 +7,7 @@ const router = Router();
 
 
 router.post("/addCourse", async (req, res) => {
-    const { courseName, courseId, professors } = req.body;
+    const { courseName, courseId, professors,courseImage } = req.body;
 
     try {
         const isExist = await Course.findOne({ courseid: courseId });
@@ -26,6 +26,7 @@ router.post("/addCourse", async (req, res) => {
         const courseDetails = await Course.create({
             coursename: courseName,
             courseid: courseId,
+            courseImage:courseImage,
             professor: professorIds
         });
         // console.log(courseDetails);
