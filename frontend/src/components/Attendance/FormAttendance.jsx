@@ -50,33 +50,33 @@ function FormAttendance({ onSubmitAttendance }) {
   };
 
   // Function to handle form submission
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const currentDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
-    const attendanceData = Object.entries(attendance).map(
-      ([userId, status]) => ({
-        roll: users.find((user) => user._id === userId).rollno,
-        status,
-        date: currentDate, // Add current date to each attendance object
-      })
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  const currentDate = new Date().toISOString().split("T")[0];
+  const attendanceData = Object.entries(attendance).map(([userId, status]) => ({
+    rollno: users.find((user) => user._id === userId).rollno,
+    status,
+    date: currentDate,
+  }));
+  try {
+    await axios.post(
+      `http://localhost:5000/markAttendance/${subId}`,
+      {attendanceData}, // Send attendance data directly as an array
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
+      }
     );
-    try {
-      await axios.post(
-        `http://localhost:5000/markAttendance/${subId}`,
-        attendanceData,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("Attendance data submitted successfully:", attendanceData);
-      // Call the onSubmitAttendance callback if needed
-    } catch (error) {
-      console.error("Error submitting attendance:", error);
-    }
-  };
+    console.log("Attendance data submitted successfully:", attendanceData);
+  } catch (error) {
+    console.error("Error submitting attendance:", error);
+  }
+};
+
+
+
 
   return (
     <form

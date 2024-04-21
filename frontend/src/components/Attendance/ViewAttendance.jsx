@@ -1,4 +1,6 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 function ViewAttendance() {
   // Dummy data for attendance (replace with actual data)
@@ -10,6 +12,33 @@ function ViewAttendance() {
     "2024-05-31": "absent",
     // Add more dates and attendance status here...
   };
+
+  const {subId} = useParams();
+
+  useEffect(() => {
+    const getData = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const data = await axios.get(
+            `http://localhost:5000/viewAttendance/${subId}`,
+            {
+              headers: {
+                authorization: token,
+              },
+            }
+          );
+          console.log(data)
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      } else {
+        console.error("Token not found in localStorage");
+      }
+    };
+
+    getData();
+  }, [subId]);
 
   // Get the first date in the attendance data
   const firstDate = Object.keys(attendanceData)[0];
