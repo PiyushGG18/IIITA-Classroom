@@ -21,10 +21,11 @@ function UserCard() {
               authorization: token, // Pass the token directly, assuming it's a string
             },
           });
+          console.log(data)
           const subData=data.data.user.courses
 
           const formattedData = subData.map((item) => ({
-            Image: Image4, // Assuming Image4 is defined somewhere in your code
+            Image: item.courseImage, // Assuming Image4 is defined somewhere in your code
             course_name: item.course.coursename, // Assuming course name is stored in course.coursename
             course: item.course.courseid, // Assuming course ID is stored in course.courseid
             proffesor:
@@ -40,7 +41,7 @@ function UserCard() {
           }));
           // console.log(formattedData)
 
-          setData(formattedData);
+          // setData(formattedData);
 
 
         } catch (error) {

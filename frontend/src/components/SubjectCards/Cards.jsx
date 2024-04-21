@@ -8,7 +8,7 @@ import UserContext from "../../context/UserContext";
 
 function Cards() {
   const {data} = useContext(UserContext)
-  // console.log(data)
+  console.log(data)
   return (
     <div className="flex flex-wrap mt-6 ">
       {data.map((d) => (

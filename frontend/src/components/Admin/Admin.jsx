@@ -76,7 +76,7 @@ function Admin() {
           body: JSON.stringify(formState),
         });
         if (!response.ok) {
-          throw new Error('Faile to create class');
+          throw new Error('Failed to create class');
         }
         console.log('Form submitted:', formState);
         alert('Class created successfully!');
