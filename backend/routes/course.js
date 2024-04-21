@@ -1,5 +1,5 @@
 const {Router} = require("express");
-const { Course, Professor } = require("../models/index");
+const { Course, Professor, Student } = require("../models/index");
 const Userauthenticate = require("../middleware/user");
 
 const router = Router();
@@ -43,6 +43,34 @@ router.post("/addCourse", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ msg: "Failed to add course", error: error.message });
+    }
+});
+
+router.delete("/deleteCourse/:courseId", async (req, res) => {
+    const { courseId } = req.params;
+
+    try {
+        const course = await Course.findOne({ courseid: courseId });
+        if (!course) {
+            return res.status(404).json({ msg: "Course not found" });
+        }
+
+        await Course.deleteOne({ courseid: courseId });
+
+        await Student.updateMany(
+            { 'courses.course': course._id },
+            { $pull: { courses: { course: course._id } } }
+        );
+
+        await Professor.updateMany(
+            { 'courses.course': course._id },
+            { $pull: { courses: { course: course._id } } }
+        );
+
+        res.status(200).json({ msg: "Course deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Failed to delete course", error: error.message });
     }
 });
 
