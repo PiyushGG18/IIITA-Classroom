@@ -66,15 +66,13 @@ function GiveResults() {
           students: marksData,
         };
 
-        const examType = window.location.pathname.includes("midsem")
-          ? "midsem"
-          : "endsem";
-
-          console.log(data)
+        const examType = window.location.pathname.includes("midSem")
+          ? "midSem"
+          : "endSem";
 
         await axios.post(
           `http://localhost:5000/results/${subId}/${examType}`,
-          data,
+          { data },
           {
             headers: {
               authorization: token,
@@ -82,8 +80,9 @@ function GiveResults() {
           }
         );
         console.log("Data sent successfully!", data);
+        window.location.reload()
       } catch (error) {
-        console.error("Error sending data:", error );
+        console.error("Error sending data:", error);
       }
     } else {
       console.error("Token not found in localStorage");
@@ -102,7 +101,7 @@ function GiveResults() {
               value={maxMarks.reviewTest}
               onChange={handleMaxMarksChange}
               placeholder="Review Test"
-              className="border rounded px-2 py-1 mr-4"
+              className="border rounded px-2 py-1 mr-4 w-full sm:w-auto"
             />
             <input
               type="text"
@@ -110,7 +109,7 @@ function GiveResults() {
               value={maxMarks.quiz}
               onChange={handleMaxMarksChange}
               placeholder="Quiz"
-              className="border rounded px-2 py-1 mr-4"
+              className="border rounded px-2 py-1 mr-4 w-full sm:w-auto"
             />
             <input
               type="text"
@@ -118,7 +117,7 @@ function GiveResults() {
               value={maxMarks.assignments}
               onChange={handleMaxMarksChange}
               placeholder="Assignments"
-              className="border rounded px-2 py-1"
+              className="border rounded px-2 py-1 w-full sm:w-auto"
             />
           </div>
           <hr className="border-gray-300 mb-2" />
@@ -139,7 +138,7 @@ function GiveResults() {
             value={user.reviewTest || ""}
             onChange={(e) => handleUserMarksChange(e, user._id)}
             placeholder="Review Test"
-            className="border rounded px-2 py-1 mr-4 w-full md:w-auto mb-2 md:mb-0"
+            className="border rounded px-2 py-1 mr-4 w-full sm:w-auto mb-2 md:mb-0"
           />
           <input
             type="text"
@@ -147,7 +146,7 @@ function GiveResults() {
             value={user.quiz || ""}
             onChange={(e) => handleUserMarksChange(e, user._id)}
             placeholder="Quiz"
-            className="border rounded px-2 py-1 mr-4 w-full md:w-auto mb-2 md:mb-0"
+            className="border rounded px-2 py-1 mr-4 w-full sm:w-auto mb-2 md:mb-0"
           />
           <input
             type="text"
@@ -155,7 +154,7 @@ function GiveResults() {
             value={user.assignments || ""}
             onChange={(e) => handleUserMarksChange(e, user._id)}
             placeholder="Assignments"
-            className="border rounded px-2 py-1 w-full md:w-auto mb-2 md:mb-0"
+            className="border rounded px-2 py-1 w-full sm:w-auto mb-2 md:mb-0"
           />
         </div>
       ))}
