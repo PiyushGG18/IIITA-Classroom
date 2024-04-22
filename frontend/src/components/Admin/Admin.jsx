@@ -57,14 +57,28 @@ function Admin() {
       courseName: '',
       courseId: '',
       courseImage: '',
-      professorName: '',
-      professorId: '' // Updated to store selected image option
+      professors: [{ name: '', id: '' }],
     });
-
-    const handleInputChange = (event, field) => {
-      setFormState({ ...formState, [field]: event.target.value });
+  
+    const handleInputChange = (event, field, index) => {
+      const updatedProfessors = [...formState.professors];
+      updatedProfessors[index][field] = event.target.value;
+      setFormState({ ...formState, professors: updatedProfessors });
     };
-
+  
+    const addProfessorField = () => {
+      setFormState({
+        ...formState,
+        professors: [...formState.professors, { name: '', id: '' }],
+      });
+    };
+  
+    const removeProfessorField = (index) => {
+      const updatedProfessors = [...formState.professors];
+      updatedProfessors.splice(index, 1);
+      setFormState({ ...formState, professors: updatedProfessors });
+    };
+  
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
@@ -79,7 +93,6 @@ function Admin() {
           throw new Error('Failed to create class');
         }
         console.log('Form submitted:', formState);
-        alert('Class created successfully!');
         closeForm();
         window.location.reload();
       } catch (error) {
@@ -87,80 +100,87 @@ function Admin() {
         alert('Failed to create class');
       }
     };
-
+  
     return (
-      <div className="fixed inset-0 flex justify-center items-center z-50">
-        <div className="bg-gray-700 bg-opacity-50 w-full h-full flex justify-center items-center">
-          <div className="relative bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full m-4">
-            <button onClick={closeForm} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+      <div className="fixed inset-0 overflow-hidden flex justify-center items-center z-50">
+        <div className="absolute inset-0 bg-gray-700 bg-opacity-50"></div>
+        <div className="relative bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full max-h-full overflow-y-auto">
+          <button onClick={closeForm} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <h2 className="text-2xl font-bold text-center mb-6">Enter Course Details</h2>
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            <div>
+              <label className="text-sm font-medium text-gray-600 block mb-2">Course Name</label>
+              <input
+                type="text"
+                value={formState.courseName}
+                onChange={(e) => setFormState({ ...formState, courseName: e.target.value })}
+                className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
+              <select
+                value={formState.courseImage}
+                onChange={(e) => setFormState({ ...formState, courseImage: e.target.value })}
+                className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Select Image</option>
+                <option value={Image1}>Image 1</option>
+                <option value={Image2}>Image 2</option>
+                <option value={Image3}>Image 3</option>
+                <option value={Image4}>Image 4</option>
+                <option value={Image5}>Image 5</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-600 block mb-2">Course ID</label>
+              <input
+                type="text"
+                value={formState.courseId}
+                onChange={(e) => setFormState({ ...formState, courseId: e.target.value })}
+                className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            {formState.professors.map((professor, index) => (
+              <div key={index}>
+                <label className="text-sm font-medium text-gray-600 block mb-2">Professor {index + 1}</label>
+                <input
+                  type="text"
+                  value={professor.name}
+                  onChange={(e) => handleInputChange(e, 'name', index)}
+                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
+                  placeholder="Professor Name"
+                  required
+                />
+                <input
+                  type="text"
+                  value={professor.id}
+                  onChange={(e) => handleInputChange(e, 'id', index)}
+                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Professor ID"
+                  required
+                />
+                {index > 0 && (
+                  <button type="button" onClick={() => removeProfessorField(index)} className="text-red-500 mt-2">
+                    Remove Professor
+                  </button>
+                )}
+              </div>
+            ))}
+            <button type="button" onClick={addProfessorField} className="text-blue-500 mt-2">
+              Add Professor
             </button>
-            <h2 className="text-2xl font-bold text-center mb-6">Enter Course Details</h2>
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Course Name</label>
-                <input
-                  type="text"
-                  value={formState.courseName}
-                  onChange={(e) => handleInputChange(e, 'courseName')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              {/* Replace file input with dropdown menu */}
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
-                <select
-                  value={formState.courseImage}
-                  onChange={(e) => handleInputChange(e, 'courseImage')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                >
-                  <option value="">Select Image</option>
-                  <option value={Image1}>Image 1</option>
-                  <option value={Image2}>Image 2</option>
-                  <option value={Image3}>Image 3</option>
-                  <option value={Image4}>Image 4</option>
-                  <option value={Image5}>Image 5</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Course ID</label>
-                <input
-                  type="text"
-                  value={formState.courseId}
-                  onChange={(e) => handleInputChange(e, 'courseId')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Professor Name</label>
-                <input
-                  type="text"
-                  value={formState.professorName}
-                  onChange={(e) => handleInputChange(e, 'professorName')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Professor ID</label>
-                <input
-                  type="text"
-                  value={formState.professorId}
-                  onChange={(e) => handleInputChange(e, 'professorId')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div className="flex justify-end mt-6">
-                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">Create Course</button>
-              </div>
-            </form>
-          </div>
+            <div className="flex justify-end mt-6">
+              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">Create Course</button>
+            </div>
+          </form>
         </div>
       </div>
     );
@@ -331,15 +351,15 @@ function Admin() {
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
-        const response = await fetch(`${BASE_URL}/courses/${formState.courseId}`, {
+        const response = await fetch(`http://localhost:5000/course/deleteCourse/${formState.courseId}`, {
           method: 'DELETE',
         });
         if (!response.ok) {
           throw new Error('Failed to delete class');
         }
         console.log('Form submitted:', formState);
-        alert('Class deleted successfully!');
         closeForm();
+        window.location.reload();
       } catch (error) {
         console.error('Error:', error);
         alert('Failed to delete class');
@@ -385,19 +405,42 @@ function Admin() {
     const [formState, setFormState] = useState({
       courseName: '',
       courseId: '',
-      professorName: '',
-      professorId: '',
-      courseImage: '', // Updated to store selected image option
+      courseImage: '',
+      professors: [{ name: '', id: '' }],
     });
   
     const handleInputChange = (event, field) => {
       setFormState({ ...formState, [field]: event.target.value });
     };
   
+    const handleProfessorChange = (event, field, index) => {
+      const updatedProfessors = [...formState.professors];
+      updatedProfessors[index][field] = event.target.value;
+      setFormState({ ...formState, professors: updatedProfessors });
+    };
+  
+    const addProfessorField = () => {
+      setFormState({
+        ...formState,
+        professors: [...formState.professors, { name: '', id: '' }],
+      });
+    };
+  
+    const removeProfessorField = (index) => {
+      const updatedProfessors = [...formState.professors];
+      updatedProfessors.splice(index, 1);
+      setFormState({ ...formState, professors: updatedProfessors });
+    };
+  
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
-        // Your form submission logic
+        const response = await axios.put('YOUR_BACKEND_ENDPOINT', formState);
+        
+        console.log('Class details edited successfully');
+        // Optionally, you can reset the form state or close the form
+        // setFormState({ ...initialState });
+        // closeForm();
       } catch (error) {
         console.error('Error:', error);
         alert('Failed to edit class');
@@ -405,80 +448,87 @@ function Admin() {
     };
   
     return (
-      <div className="fixed inset-0 flex justify-center items-center z-50">
-        <div className="bg-gray-700 bg-opacity-50 w-full h-full flex justify-center items-center">
-          <div className="relative bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full m-4">
-            <button onClick={closeForm} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+      <div className="fixed inset-0 overflow-hidden flex justify-center items-center z-50">
+        <div className="absolute inset-0 bg-gray-700 bg-opacity-50"></div>
+        <div className="relative bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full max-h-full overflow-y-auto">
+          <button onClick={closeForm} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <h2 className="text-2xl font-bold text-center mb-6">Edit Class Details</h2>
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            <div>
+              <label className="text-sm font-medium text-gray-600 block mb-2">Course Name</label>
+              <input
+                type="text"
+                value={formState.courseName}
+                onChange={(e) => handleInputChange(e, 'courseName')}
+                className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
+              <select
+                value={formState.courseImage}
+                onChange={(e) => handleInputChange(e, 'courseImage')}
+                className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Select Image</option>
+                <option value={Image1}>Image 1</option>
+                <option value={Image2}>Image 2</option>
+                <option value={Image3}>Image 3</option>
+                <option value={Image4}>Image 4</option>
+                <option value={Image5}>Image 5</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-600 block mb-2">Course ID</label>
+              <input
+                type="text"
+                value={formState.courseId}
+                onChange={(e) => handleInputChange(e, 'courseId')}
+                className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            {formState.professors.map((professor, index) => (
+              <div key={index}>
+                <label className="text-sm font-medium text-gray-600 block mb-2">Professor {index + 1}</label>
+                <input
+                  type="text"
+                  value={professor.name}
+                  onChange={(e) => handleProfessorChange(e, 'name', index)}
+                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
+                  placeholder="Professor Name"
+                  required
+                />
+                <input
+                  type="text"
+                  value={professor.id}
+                  onChange={(e) => handleProfessorChange(e, 'id', index)}
+                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Professor ID"
+                  required
+                />
+                {index > 0 && (
+                  <button type="button" onClick={() => removeProfessorField(index)} className="text-red-500 mt-2">
+                    Remove Professor
+                  </button>
+                )}
+              </div>
+            ))}
+            <button type="button" onClick={addProfessorField} className="text-blue-500 mt-2">
+              Add Professor
             </button>
-            <h2 className="text-2xl font-bold text-center mb-6">Edit Class Details</h2>
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Course Name</label>
-                <input
-                  type="text"
-                  value={formState.courseName}
-                  onChange={(e) => handleInputChange(e, 'courseName')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              {/* Replace file input with dropdown menu */}
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Course Image</label>
-                <select
-                  value={formState.courseImage}
-                  onChange={(e) => handleInputChange(e, 'courseImage')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                >
-                  <option value="">Select Image</option>
-                  <option value={Image1}>Image 1</option>
-                  <option value={Image2}>Image 2</option>
-                  <option value={Image3}>Image 3</option>
-                  <option value={Image4}>Image 4</option>
-                  <option value={Image5}>Image 5</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Course ID</label>
-                <input
-                  type="text"
-                  value={formState.courseId}
-                  onChange={(e) => handleInputChange(e, 'courseId')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Professor Name</label>
-                <input
-                  type="text"
-                  value={formState.professorName}
-                  onChange={(e) => handleInputChange(e, 'professorName')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-600 block mb-2">Professor ID</label>
-                <input
-                  type="text"
-                  value={formState.professorId}
-                  onChange={(e) => handleInputChange(e, 'professorId')}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div className="flex justify-end mt-6">
-                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-200 ease-in-out transform hover:-translate-y-1">
-                  Edit Class
-                </button>
-              </div>
-            </form>
-          </div>
+            <div className="flex justify-end mt-6">
+              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-200 ease-in-out transform hover:-translate-y-1">
+                Edit Class
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     );

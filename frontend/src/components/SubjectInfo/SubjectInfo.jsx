@@ -27,6 +27,8 @@ function SubjectInfo() {
           const d=data.data.course;
           setSub(d);
 
+          // console.log(data)
+
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -47,7 +49,7 @@ function SubjectInfo() {
       <div className="p-4 md:p-8 h-11/12  md:h-4/6 flex">
         <div className="w-full md:w-3/4 relative bg-contain h-40 md:h-64  overflow-hidden rounded-2xl shadow-lg group  ">
           <img
-            src={Image4}
+            src={sub.courseImage}
             alt=""
             className="w-full h-full  transition-transform group-hover:scale-110 duration-200"
           />
