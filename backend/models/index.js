@@ -92,16 +92,16 @@ const CourseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Student'
     }],
-    midSemWeightage: [{
+    midSemWeightage: {
         quiz: Number,
         review: Number,
         assignment: Number
-    }],
-    endSemWeightage: [{
+    },
+    endSemWeightage: {
         quiz: Number,
         review: Number,
         assignment: Number
-    }]
+    }
 
 })
 
