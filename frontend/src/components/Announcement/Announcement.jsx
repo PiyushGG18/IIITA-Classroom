@@ -1,49 +1,42 @@
-import React, {useState} from 'react'
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 function Announcement(props) {
-    const [showInput, setShowInput] = useState(false);
-    const [inputValue, setInput] = useState("");
-    const [image, setImage] = useState(null);
-    const { subId } = useParams();
+  const [showInput, setShowInput] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [image, setImage] = useState(null);
+  const { subId } = useParams();
 
-    const handleChange = (e) => {
-      if (e.target.files[0]) {
-        setImage(e.target.files[0]);
-      }
-    };
+  const handleChange = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  };
 
-    const handleUpload = (e) => {
+  const handleUpload = async (e) => {
+    e.preventDefault();
 
-      const postData={
-        content:inputValue,
-      }
-      const token = localStorage.getItem("token");
-      
-      e.preventDefault();
+    const formData = new FormData();
+    formData.append("content", inputValue); // Add the text content
+    if (image) {
+      formData.append("file", image); // Add the file if one was selected
+    }
 
-      const postIt =(async ()=>{
-        await axios
-        .post(`http://localhost:5000/post/${subId}`, 
-          postData,{
-          headers: {
-            authorization: token, 
-          },
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.post(`http://localhost:5000/post/${subId}`, formData, {
+        headers: {
+          Authorization: token,
+          "Content-Type": "multipart/form-data", // Important: Set the content type to multipart/form-data
         },
-        )
-        .then((res) => {
-          // console.log(res);
-          window.location.reload();
-        })
-        .catch((err) => {
-          console.log(err +" "+ subId);
-        });
-      })
-
-      postIt();
-      
-    };
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Error uploading:", error.response || error.message);
+    }
+  };
 
   return (
     <div className="w-full bg-white rounded-md overflow-hidden">
@@ -56,7 +49,7 @@ function Announcement(props) {
                 className="w-full h-40  border border-gray-300 rounded-md focus:outline-none resize-none"
                 placeholder="Announce Something to class"
                 value={inputValue}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => setInputValue(e.target.value)}
               ></textarea>
               <div className="mt-4 flex flex-col sm:flex-row items-center justify-between">
                 <input
@@ -95,4 +88,4 @@ function Announcement(props) {
   );
 }
 
-export default Announcement
+export default Announcement;

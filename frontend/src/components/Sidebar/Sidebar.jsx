@@ -46,7 +46,7 @@ export default function Sidebar() {
   const {setExpand} = useContext(UserContext)
   return (
     <div className="w-full">
-      <div className="h-full  mt-8 flex flex-col bg-white border-r shadow-sm">
+      <div className=" h-svh  mt-8 flex flex-col bg-white border-r shadow-sm">
         <ul className="">
           {items.map((item, i, items) => (
             <NavLink

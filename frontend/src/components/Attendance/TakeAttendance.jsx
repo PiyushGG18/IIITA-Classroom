@@ -21,7 +21,7 @@ function TakeAttendance() {
           const subData = data.data.user.courses;
 
           const formattedData = subData.map((item) => ({
-            Image: Image4,
+            Image: item.course.courseImage,
             course_name: item.course.coursename,
             course: item.course.courseid,
             proffesor:
