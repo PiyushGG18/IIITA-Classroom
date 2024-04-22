@@ -22,16 +22,16 @@ const CourseRecordSchema = new mongoose.Schema({
         date: String,
         present: Boolean
     }],
-    midSem: [{
+    midSem: {
         quiz: Number,
         review: Number,
         assignment: Number
-    }],
-    endSem: [{
+    },
+    endSem: {
         quiz: Number,
         review: Number,
         assignment: Number
-    }]
+    }
 });
 
 const CourseRecordSchema1 = new mongoose.Schema({
@@ -91,6 +91,16 @@ const CourseSchema = new mongoose.Schema({
     students: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Student'
+    }],
+    midSemWeightage: [{
+        quiz: Number,
+        review: Number,
+        assignment: Number
+    }],
+    endSemWeightage: [{
+        quiz: Number,
+        review: Number,
+        assignment: Number
     }]
 
 })
