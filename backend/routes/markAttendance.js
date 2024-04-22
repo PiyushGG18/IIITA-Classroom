@@ -56,7 +56,7 @@ router.post('/:courseId', professorauthenticate,async (req, res) => {
                         $push: {
                             "courses.$.attendance": {
                                 date: attendance.date,
-                                present: attendance.status === "true" // Ensure conversion from string to boolean
+                                present: attendance.status // Ensure conversion from string to boolean
                             }
                         }
                     }

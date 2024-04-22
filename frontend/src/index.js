@@ -17,6 +17,9 @@ import Admin from "./components/Admin/Admin"
 import TakeAttendance from "./components/Attendance/TakeAttendance";
 import FormAttendance from "./components/Attendance/FormAttendance";
 import ViewAttendance from "./components/Attendance/ViewAttendance"
+import SemPart from "./components/Results/SemPart";
+import GiveResults from "./components/Results/GiveResults";
+import ViewResults from "./components/Results/ViewResults";
 
 const lst=JSON.parse(localStorage.getItem('nuser'));
 const role=localStorage.getItem('role');
@@ -38,10 +41,6 @@ const router = createBrowserRouter([
         path: "to-do",
         element: <ToDo />,
       },
-      {
-        path: "results",
-        element: <Results />,
-      },
     ],
   },
   {
@@ -58,6 +57,28 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/results",
+    element: <App/>,
+    children:[
+      {
+        path: "",
+        element: <Results/>
+      },
+      {
+        path: ":subId",
+        element: <SemPart/>
+      },
+      {
+        path:":subId/midsem",
+        element: (role==="Professor"?<GiveResults/>:<ViewResults/>)
+      },
+      {
+        path:":subId/endsem",
+        element: (role==="Professor"?<GiveResults/>:<ViewResults/>)
+      },
+    ]
+  }
 ]);
 
 

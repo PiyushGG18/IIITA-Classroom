@@ -70,6 +70,7 @@ const handleSubmit = async (event) => {
       }
     );
     console.log("Attendance data submitted successfully:", attendanceData);
+    window.location.reload()
   } catch (error) {
     console.error("Error submitting attendance:", error);
   }
