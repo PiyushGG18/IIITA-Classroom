@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 function SubAssignment() {
   const [userRole, setUserRole] = useState("");
@@ -7,12 +9,14 @@ function SubAssignment() {
   const [fileStates, setFileStates] = useState({});
   const [newAssignmentFormVisible, setNewAssignmentFormVisible] =
     useState(false);
+
   const [newAssignmentData, setNewAssignmentData] = useState({
     title: "",
     description: "",
     dueDate: "",
-    files: [],
+    file: null, 
   });
+
 
   useEffect(() => {
     // Get user role from local storage
@@ -80,26 +84,45 @@ function SubAssignment() {
   };
 
   const handleNewAssignmentFileChange = (e) => {
-    const selectedFiles = e.target.files;
+    const selectedFile = e.target.files[0]; // Selecting just the first file
     setNewAssignmentData({
       ...newAssignmentData,
-      files: [...selectedFiles],
+      file: selectedFile,
     });
   };
+  const {subId} = useParams();
 
-  const handleNewAssignmentSubmit = (e) => {
+  const handleNewAssignmentSubmit = async (e) => {
     e.preventDefault();
-    // Logic to handle submission of new assignment
-    console.log("New Assignment Data:", newAssignmentData);
-    // Reset form fields after submission
+
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("file", newAssignmentData.file); // Adjust field name to "file"
+    formData.append("title", newAssignmentData.title);
+    formData.append("description", newAssignmentData.description);
+    formData.append("dueDate", newAssignmentData.dueDate);
+
+    try {
+      await axios.post(`http://localhost:5000/todo/${subId}`, formData, {
+        headers: {
+          Authorization: token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Assignment submitted successfully");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error uploading:", error);
+    }
+
     setNewAssignmentData({
       title: "",
       description: "",
       dueDate: "",
-      files: [],
+      file: null,
     });
     setNewAssignmentFormVisible(false);
-  };
+  };;
 
   const handleCancelNewAssignment = () => {
     setNewAssignmentFormVisible(false);
