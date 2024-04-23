@@ -14,6 +14,7 @@ const userLoginRouter = require("./routes/userLogin");
 const attendanceRouter = require("./routes/markAttendance");
 const viewAttendanceRouter = require("./routes/viewAttendance");
 const resultRouter = require("./routes/results");
+const todoRouter = require("./routes/todo");
 
 // const bcrypt = require('bcrypt');
 app.use(cors());
@@ -29,6 +30,7 @@ app.use("/user",userLoginRouter)
 app.use("/markAttendance",attendanceRouter);
 app.use("/viewAttendance",viewAttendanceRouter);
 app.use("/results",resultRouter);
+app.use("/todo",todoRouter);
 
 app.listen(5000,()=>{
     console.log("Server started running")

@@ -48,7 +48,8 @@ const StudentSchema = new mongoose.Schema({
     password: { type: String, required: true },
     rollno: { type: String, required: true },
     courses: [CourseRecordSchema],
-    image: { type: String, required: false }
+    image: { type: String, required: false },
+    submissions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Submission' }]
 });
 
 
@@ -101,7 +102,8 @@ const CourseSchema = new mongoose.Schema({
         quiz: Number,
         review: Number,
         assignment: Number
-    }
+    },
+    assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }]
 
 })
 
@@ -112,7 +114,9 @@ const AssignmentSchema = new mongoose.Schema({
     dueDate: { type: Date, required: true },
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
     files: [{ type: String, required: false }], // URLs to files like PDFs
-    postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Professor' } // Reference to the Professor or TA
+    postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Professor' }, // Reference to the Professor or TA
+    postedOn: { type: Date, default: Date.now },
+    submissions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Submission' }]
 });
 
 const SubmissionSchema = new mongoose.Schema({
@@ -122,15 +126,8 @@ const SubmissionSchema = new mongoose.Schema({
     submittedOn: { type: Date, default: Date.now }
 });
 
-// Embedding assignments directly in the Course Schema
-CourseSchema.add({
-    assignments: [AssignmentSchema]
-});
 
-// Student Schema modified to include submissions
-StudentSchema.add({
-    submissions: [SubmissionSchema]
-});
+
 
 
 const Student = mongoose.model('Student', StudentSchema)
