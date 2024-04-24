@@ -71,7 +71,7 @@ router.post('/:courseId/submit', userAuthenticate, upload.single('file'), async 
 
         await newSubmission.save();
         await Student.findByIdAndUpdate(userDetail._id, {
-            $push: { submissions: newSubmission._id }
+            $set: { submissions: newSubmission._id }
         });
         await Assignment.findByIdAndUpdate(assignmentId,{
             $push: { submissions: newSubmission._id }
@@ -157,6 +157,22 @@ router.get('/:courseId', Authenticate, async (req, res) => {
         res.status(500).json({ message: "Failed to retrieve assignments", error: err.message });
     }
 });
+
+router.post(
+  "/:courseId/submissions",
+  professorauthenticate,
+  async (req, res) => {
+    try {
+      const { assignmentId } = req.body;
+      const submissions = await Submission.find({ assignment: assignmentId })
+        .populate("student","rollno") // Optional: Populate student details
+        .exec();
+      res.json(submissions);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  }
+);
 
 router.get('/courses/:courseId/assignments', async (req, res) => {
     const { courseId } = req.params;

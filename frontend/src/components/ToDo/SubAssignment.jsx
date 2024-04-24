@@ -49,6 +49,7 @@ function SubAssignment() {
             expanded: false,
           })
         );
+        // console.log(modifiedAssignments)
         setAssignments(modifiedAssignments);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -153,11 +154,32 @@ function SubAssignment() {
     });
   };
 
-  const handleViewAllSubmissions = (assignmentId) => {
-    const assignment = assignments.find((a) => a._id === assignmentId);
-    const newUrl = `/todo/${subId}/submissions/${assignmentId}`;
-    navigate(newUrl, { state: { assignment } });
-  };
+const handleViewAllSubmissions = async (assignmentId) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      `http://localhost:5000/todo/${subId}/submissions`,
+      {
+        assignmentId: assignmentId,
+      },
+      {
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Redirect to the /todo/{subId}/submissions URL
+    navigate(`/todo/${subId}/submissions`, {
+      state: { submissions: response.data },
+    });
+  } catch (error) {
+    console.error("Error fetching submissions:", error);
+  }
+};
+
+
 
   return (
     <div className="container mx-auto px-4 py-8 relative">
