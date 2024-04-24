@@ -24,6 +24,7 @@ import GiveResults from "./components/Results/GiveResults";
 import ViewResults from "./components/Results/ViewResults";
 import SubAssignment from "./components/ToDo/SubAssignment";
 import Submission from "./components/ToDo/Submission";
+import AllSubmissions from "./components/ToDo/AllSubmissions";
 
 const lst=JSON.parse(localStorage.getItem('nuser'));
 const role=localStorage.getItem('role');
@@ -94,6 +95,10 @@ const router = createBrowserRouter([
       {
         path:":subId/submission",
         element: <Submission/>
+      },
+      {
+        path:":subId/submissions",
+        element:<AllSubmissions/>
       }
     ]
   }
