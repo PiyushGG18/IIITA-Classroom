@@ -167,7 +167,10 @@ router.get('/:courseId/submissions',professorauthenticate,async (req, res) => {
         const submissions = await Submission.find({ assignment: assignmentId })
         .populate('student', 'name') // Optional: Populate student details
         .exec();
-        res.json(submissions);
+        res.json({
+            msg: "Submissions retrieved successfully",
+            submissions
+    });
     } catch (error) {
         res.status(500).send(error.message);
     }
