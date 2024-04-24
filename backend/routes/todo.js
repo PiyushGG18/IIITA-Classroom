@@ -158,9 +158,9 @@ router.get('/:courseId', Authenticate, async (req, res) => {
     }
 });
 
-router.get('/:assignmentId/submissions', professorauthenticate ,async (req, res) => {
+router.get('/:courdeId/submissions', professorauthenticate ,async (req, res) => {
     try {
-        const { assignmentId } = req.params;
+        const { assignmentId } = req.body;
         const submissions = await Submission.find({ assignment: assignmentId })
         .populate('student', 'name') // Optional: Populate student details
         .exec();
