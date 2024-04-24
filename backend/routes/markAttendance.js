@@ -38,7 +38,7 @@ router.post('/:courseId', professorauthenticate,async (req, res) => {
     console.log(req.body);
     const { courseId } = req.params;
     const attendanceData = req.body.attendanceData; // Correctly accessing attendanceData
-
+    console.log(attendanceData)
     if (!Array.isArray(attendanceData)) {
         return res.status(400).json({ message: 'Invalid input format, expected an array of attendance records' });
     }

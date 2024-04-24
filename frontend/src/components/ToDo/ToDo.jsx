@@ -5,7 +5,7 @@ import axios from "axios";
 
 function Results() {
   const { data, setData } = useContext(UserContext);
-  const [url,setUrl]=useState();
+  const [url, setUrl] = useState();
 
   useEffect(() => {
     const getData = async () => {
@@ -30,7 +30,6 @@ function Results() {
           }));
 
           setData(formattedData);
-
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -41,8 +40,6 @@ function Results() {
 
     getData();
   }, []);
-
-
 
   return (
     <div className="flex flex-wrap justify-center absolute">
@@ -65,9 +62,9 @@ function Results() {
             </p>
           </div>
           <div className="p-4 ">
-            <Link to={`/results/${d.course}`} className="block w-full">
+            <Link to={`/todo/${d.course}`} className="block w-full">
               <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 transition duration-300 ease-in-out">
-                Show details
+                View Assignments
               </button>
             </Link>
           </div>
