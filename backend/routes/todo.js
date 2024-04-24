@@ -102,43 +102,53 @@ router.get('/:courseId', Authenticate, async (req, res) => {
     const { courseId } = req.params;
     const userEmail = req.email; // Assuming req.user is populated from the authentication middleware
     const userRole = req.role;
-    // console.log(userRole.toString());
     let userDetail;
 
     try {
-        const courseDetails = await Course.findOne({courseid: courseId});
-        if(userRole.toString() === "Professor"){
-            
-            userDetail = await Professor.findOne({email: userEmail});
+        const courseDetails = await Course.findOne({ courseid: courseId });
+        if (!courseDetails) {
+            return res.status(404).json({ message: 'Course not found' });
         }
-        else{
-            userDetail = await Student.findOne({email: userEmail});
+
+        if (userRole.toString() === "Professor") {
+            userDetail = await Professor.findOne({ email: userEmail });
+        } else {
+            userDetail = await Student.findOne({ email: userEmail });
         }
+
         const course = await Course.findById(courseDetails._id)
             .populate({
                 path: 'assignments',
-                populate: {
-                    path: 'submissions',
-                    match: { student: userDetail._id } // Only populate submissions by the logged-in student
-                }
+                populate: [
+                    {
+                        path: 'postedBy',
+                        model: 'Professor' // Assuming the Professor model handles both Professors and TAs
+                    },
+                    {
+                        path: 'submissions',
+                        match: { student: userDetail._id }, // Only populate submissions by the logged-in student
+                        populate: { 
+                            path: 'student', 
+                            model: 'Student' 
+                        }
+                    }
+                ]
             });
 
-        if (!course) {
-            return res.status(404).json({ message: 'Course not found' });
-        }
-        // console.log(course.assignments[0].submissions);
-        // Extract assignments and include student-specific submission details
         const assignments = course.assignments.map(assignment => {
-            // Find submission for this student (if exists)
             const submission = assignment.submissions;
-            // console.log(submission[0]);
+
             return {
                 _id: assignment._id,
                 title: assignment.title,
                 description: assignment.description,
                 dueDate: assignment.dueDate,
                 files: assignment.files,
-                postedBy: assignment.postedBy,
+                postedBy: {
+                    _id: assignment.postedBy._id,
+                    name: assignment.postedBy.name, // Example field
+                    email: assignment.postedBy.email // Example field
+                },
                 postedOn: assignment.postedOn,
                 submission: submission[0] ? {
                     _id: submission[0]._id,
