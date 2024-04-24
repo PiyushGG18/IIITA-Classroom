@@ -158,6 +158,19 @@ router.get('/:courseId', Authenticate, async (req, res) => {
     }
 });
 
+router.get('/:courdeId/submissions', professorauthenticate ,async (req, res) => {
+    try {
+        const { assignmentId } = req.body;
+        const submissions = await Submission.find({ assignment: assignmentId })
+        .populate('student', 'name') // Optional: Populate student details
+        .exec();
+        res.json(submissions);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+
 router.get('/courses/:courseId/assignments', async (req, res) => {
     const { courseId } = req.params;
 
