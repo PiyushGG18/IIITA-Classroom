@@ -26,7 +26,7 @@ const items = [
     icon: <ListTodo size={20} />,
     text: "To do",
     active: "",
-    link: "to-do",
+    link: "todo",
   },
   {
     icon: <CandlestickChart size={20} />,

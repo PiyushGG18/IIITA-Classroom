@@ -4,6 +4,8 @@ import App from "./App";
 import "./index.css";
 import UserContextProvider from "./context/UserContextProvider";
 import {  RouterProvider, createBrowserRouter } from "react-router-dom";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+
 
 
 
@@ -11,12 +13,17 @@ import Login from "./components/login/Login";
 import UserCard from "./components/dashboard/UserCard";
 import SubjectInfo from "./components/SubjectInfo/SubjectInfo";
 import Attendance from "./components/Attendance/Attendance";
-import ToDo from "./components/To-Do/ToDo";
+import ToDo from "./components/ToDo/ToDo";
 import Results from "./components/Results/Results";
 import Admin from "./components/Admin/Admin"
 import TakeAttendance from "./components/Attendance/TakeAttendance";
 import FormAttendance from "./components/Attendance/FormAttendance";
 import ViewAttendance from "./components/Attendance/ViewAttendance"
+import SemPart from "./components/Results/SemPart";
+import GiveResults from "./components/Results/GiveResults";
+import ViewResults from "./components/Results/ViewResults";
+import SubAssignment from "./components/ToDo/SubAssignment";
+import Submission from "./components/ToDo/Submission";
 
 const lst=JSON.parse(localStorage.getItem('nuser'));
 const role=localStorage.getItem('role');
@@ -34,14 +41,6 @@ const router = createBrowserRouter([
         path: "subject/:subId",
         element: <SubjectInfo />,
       },
-      {
-        path: "to-do",
-        element: <ToDo />,
-      },
-      {
-        path: "results",
-        element: <Results />,
-      },
     ],
   },
   {
@@ -58,6 +57,46 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/results",
+    element: <App/>,
+    children:[
+      {
+        path: "",
+        element: <Results/>
+      },
+      {
+        path: ":subId",
+        element: <SemPart/>
+      },
+      {
+        path:":subId/midsem",
+        element: (role==="Professor"?<GiveResults/>:<ViewResults/>)
+      },
+      {
+        path:":subId/endsem",
+        element: (role==="Professor"?<GiveResults/>:<ViewResults/>)
+      },
+    ]
+  },
+  {
+    path: "/todo",
+    element: <App/>,
+    children: [
+      {
+        path: "",
+        element: <ToDo/>
+      },
+      {
+        path: ":subId",
+        element: <SubAssignment/>
+      },
+      {
+        path:":subId/submission",
+        element: <Submission/>
+      }
+    ]
+  }
 ]);
 
 
