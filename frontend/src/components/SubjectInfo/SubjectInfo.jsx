@@ -12,6 +12,7 @@ const Image4 = "/photos/Subjects/img4.jpg";
 function SubjectInfo() {
   const { subId } = useParams();
   const [sub,setSub] = useState({});
+  const role= localStorage.getItem('role');
 
   
   useEffect(() => {
@@ -90,7 +91,7 @@ function SubjectInfo() {
             <SubjectPost sub={sub} />
           </div>
         </div>
-        <div className="w-1/4 hidden md:flex">
+        {role=='Professor'?<div className="w-1/4 hidden md:flex">
                 
 
           <div className="p-4 ">
@@ -100,7 +101,8 @@ function SubjectInfo() {
               </button>
             </Link>
           </div>
-        </div>
+        </div>:<></>}
+        
       </div>
     </div>
   );
