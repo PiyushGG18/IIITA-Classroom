@@ -49,7 +49,7 @@ function Header() {
           <span className="mr-1 font-semibold ">IIITA </span> Classroom
         </div>
         <div className="h-full w-full relative flex justify-end">
-          <form action="">
+          {/* <form action="">
             <input
               type="search"
               autoComplete="off"
@@ -74,7 +74,7 @@ function Header() {
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-          </form>
+          </form> */}
         </div>
       </div>
 

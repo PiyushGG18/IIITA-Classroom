@@ -1,19 +1,50 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 function ViewAttendance() {
   // Dummy data for attendance (replace with actual data)
-  const attendanceData = {
-    "2024-01-20": "absent",
-    "2024-02-21": "present",
-    "2024-03-01": "present",
-    "2024-04-30": "present",
-    "2024-05-31": "absent",
-    // Add more dates and attendance status here...
-  };
+  const [attendanceData, setAttendanceData] = useState({});
+  const {subId} = useParams();
+  useEffect(() => {
+    const getData = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const data = await axios.get(
+            `http://localhost:5000/viewAttendance/${subId}`,
+            {
+              headers: {
+                authorization: token,
+              },
+            }
+          );
+          const na=data.data.attendance;;
+          console.log(data.data)
+          const newAt = na.reduce((acc, day) => {
+            acc[day.date] = day.present ? "present" : "absent";
+            return acc;
+          }, {});
+          console.log(newAt)
+          setAttendanceData(newAt)
+
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      } else {
+        console.error("Token not found in localStorage");
+      }
+    };
+
+    getData();
+  }, []);
 
   // Get the first date in the attendance data
+  const currentDate = new Date().toISOString().split("T")[0];
+  // const t=new Date()
+  // console.log(t)
   const firstDate = Object.keys(attendanceData)[0];
-  const [year, month] = firstDate.split("-");
+  const [year, month] = firstDate ? firstDate.split("-") : currentDate.split("-"); // Check if firstDate is defined
 
   // Generate calendar based on the range of months in the data
   const calendarMonths = [];
