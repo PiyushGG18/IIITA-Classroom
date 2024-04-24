@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { baseUrl } from "../../Urls";
 
 function ViewResults() {
   const { subId } = useParams();
@@ -17,7 +18,7 @@ function ViewResults() {
         const token = localStorage.getItem("token");
         if (token) {
           const response = await axios.get(
-            `http://localhost:5000/results/${subId}/${examType}`,
+            `${baseUrl}/results/${subId}/${examType}`,
             {
               headers: {
                 authorization: token,

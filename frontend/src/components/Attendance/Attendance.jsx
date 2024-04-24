@@ -3,6 +3,7 @@ import Charts from "../Charts/Charts";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { baseUrl } from "../../Urls";
 
 const Image4 = "/photos/Subjects/img4.jpg";
 
@@ -15,7 +16,7 @@ function Attendance() {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const data = await axios.get("http://localhost:5000/user/Dashboard", {
+          const data = await axios.get(`${baseUrl}/user/Dashboard`, {
             headers: {
               authorization: token,
             },
@@ -51,7 +52,7 @@ function Attendance() {
         if (token) {
           const subIds = data.map((d) => d.course);
           const promises = subIds.map((subId) =>
-            axios.get(`http://localhost:5000/viewAttendance/${subId}`, {
+            axios.get(`${baseUrl}/viewAttendance/${subId}`, {
               headers: {
                 authorization: token,
               },

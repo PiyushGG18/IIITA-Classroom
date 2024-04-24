@@ -3,6 +3,7 @@ import UserContext from "../../context/UserContext";
 import "./login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { baseUrl } from "../../Urls";
 
 const Image4 = "/photos/Subjects/img4.jpg";
 
@@ -28,7 +29,7 @@ function Login() {
   function handleSubmit(e) {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/user/login", formData)
+      .post(`${baseUrl}/user/login`, formData)
       .then((response) => {
         // console.log(response);
         const newUser = {

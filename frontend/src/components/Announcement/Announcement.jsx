@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { baseUrl } from "../../Urls";
 
 function Announcement(props) {
   const [showInput, setShowInput] = useState(false);
@@ -26,7 +27,7 @@ function Announcement(props) {
     const token = localStorage.getItem("token");
 
     try {
-      await axios.post(`http://localhost:5000/post/${subId}`, formData, {
+      await axios.post(`${baseUrl}/post/${subId}`, formData, {
         headers: {
           Authorization: token,
           "Content-Type": "multipart/form-data", // Important: Set the content type to multipart/form-data

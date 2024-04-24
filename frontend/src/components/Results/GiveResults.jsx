@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { baseUrl } from "../../Urls";
 
 function GiveResults() {
   const [users, setUsers] = useState([]);
@@ -17,7 +18,7 @@ function GiveResults() {
       if (token) {
         try {
           const data = await axios.get(
-            `http://localhost:5000/markAttendance/${subId}`,
+            `${baseUrl}/markAttendance/${subId}`,
             {
               headers: {
                 authorization: token,
@@ -71,7 +72,7 @@ function GiveResults() {
           : "endSem";
 
         await axios.post(
-          `http://localhost:5000/results/${subId}/${examType}`,
+          `${baseUrl}/results/${subId}/${examType}`,
           { data },
           {
             headers: {

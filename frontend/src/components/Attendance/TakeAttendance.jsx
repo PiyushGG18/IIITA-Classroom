@@ -3,6 +3,8 @@ import UserContext from "../../context/UserContext";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+import { baseUrl } from "../../Urls";
+
 const Image4 = "/photos/Subjects/img4.jpg";
 
 function TakeAttendance() {
@@ -13,7 +15,7 @@ function TakeAttendance() {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const data = await axios.get("http://localhost:5000/user/Dashboard", {
+          const data = await axios.get(`${baseUrl}/user/Dashboard`, {
             headers: {
               authorization: token,
             },

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { baseUrl } from "../../Urls";
 
 function FormAttendance({ onSubmitAttendance }) {
   const { subId } = useParams();
@@ -13,7 +14,7 @@ function FormAttendance({ onSubmitAttendance }) {
       if (token) {
         try {
           const data = await axios.get(
-            `http://localhost:5000/markAttendance/${subId}`,
+            `${baseUrl}/markAttendance/${subId}`,
             {
               headers: {
                 authorization: token,
@@ -60,8 +61,8 @@ const handleSubmit = async (event) => {
   }));
   try {
     await axios.post(
-      `http://localhost:5000/markAttendance/${subId}`,
-      {attendanceData}, // Send attendance data directly as an array
+      `${baseUrl}/markAttendance/${subId}`,
+      { attendanceData }, // Send attendance data directly as an array
       {
         headers: {
           Authorization: localStorage.getItem("token"),

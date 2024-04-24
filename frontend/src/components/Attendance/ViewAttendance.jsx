@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { baseUrl } from "../../Urls";
 
 function ViewAttendance() {
   // Dummy data for attendance (replace with actual data)
@@ -12,7 +13,7 @@ function ViewAttendance() {
       if (token) {
         try {
           const data = await axios.get(
-            `http://localhost:5000/viewAttendance/${subId}`,
+            `${baseUrl}/viewAttendance/${subId}`,
             {
               headers: {
                 authorization: token,

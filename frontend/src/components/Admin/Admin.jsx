@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import axios from 'axios'
 import UserContext from "../../context/UserContext"
 import { useContext } from 'react'
+import { baseUrl } from '../../Urls'; 
 
 const Image1 = "/photos/Subjects/img1.jpg";
 const Image2 = "/photos/Subjects/img2.jpg";
@@ -25,7 +26,7 @@ function Admin() {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const dat = await axios.get("http://localhost:5000/user/Dashboard", {
+          const dat = await axios.get(`${baseUrl}/user/Dashboard`, {
             headers: {
               authorization: token, // Pass the token directly, assuming it's a string
             },
@@ -82,7 +83,7 @@ function Admin() {
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
-        const response = await fetch(`http://localhost:5000/course/addCourse`, {
+        const response = await fetch(`${baseUrl}/course/addCourse`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -351,7 +352,7 @@ function Admin() {
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
-        const response = await fetch(`http://localhost:5000/course/deleteCourse/${formState.courseId}`, {
+        const response = await fetch(`${baseUrl}/course/deleteCourse/${formState.courseId}`, {
           method: 'DELETE',
         });
         if (!response.ok) {
@@ -545,24 +546,24 @@ function Admin() {
       >
         Create New Class
       </button>
-      <button
+      {/* <button
         className="text-white font-semibold py-3 px-6 rounded-lg bg-blue-500 border border-blue-500 hover:bg-blue-600 hover:border-blue-600 transition-all duration-300 ease-out transform hover:scale-105 w-full sm:w-auto"
         onClick={() => setShowEditForm(true)}
       >
         Edit Class
-      </button>
-      <button
+      </button> */}
+       <button
         className="text-white font-semibold py-3 px-6 rounded-lg bg-blue-500 border border-blue-500 hover:bg-blue-600 hover:border-blue-600 transition-all duration-300 ease-out transform hover:scale-105 w-full sm:w-auto"
         onClick={() => setShowDeleteForm(true)}
       >
         Delete Class
       </button>
-      <button
+      {/*<button
         className="text-white font-semibold py-3 px-6 rounded-lg bg-blue-500 border border-blue-500 hover:bg-blue-600 hover:border-blue-600 transition-all duration-300 ease-out transform hover:scale-105 w-full sm:w-auto"
         onClick={() => setShowAdminForm(true)}
       >
         Add New Admin
-      </button>
+      </button> */}
       {showCourseForm && <CourseForm closeForm={() => setShowCourseForm(false)} />}
       {showEditForm && <EditForm closeForm={() => setShowEditForm(false)} />}
       {showAdminForm && <AdminForm closeForm={() => setShowAdminForm(false)} />}

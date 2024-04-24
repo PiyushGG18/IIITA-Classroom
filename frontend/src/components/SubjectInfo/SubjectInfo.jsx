@@ -5,6 +5,7 @@ import Calender from "../dashboard/Calender";
 import SubjectPost from "./SubjectPost";
 import Announcement from "../Announcement/Announcement"
 import axios from "axios";
+import { baseUrl } from "../../Urls";
 
 const Image4 = "/photos/Subjects/img4.jpg";
 
@@ -18,7 +19,7 @@ function SubjectInfo() {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const data = await axios.get(`http://localhost:5000/course/${subId}`, {
+          const data = await axios.get(`${baseUrl}/course/${subId}`, {
             headers: {
               authorization: token, 
             },

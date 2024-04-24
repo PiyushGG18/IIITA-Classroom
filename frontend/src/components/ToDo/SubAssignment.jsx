@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {baseUrl} from "../../Urls"
 
 function SubAssignment() {
   const navigate = useNavigate();
@@ -8,8 +9,6 @@ function SubAssignment() {
   const [userRole, setUserRole] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [fileStates, setFileStates] = useState({});
-
-  const reversedAssignments = [...assignments].reverse();
   const [newAssignmentFormVisible, setNewAssignmentFormVisible] =
     useState(false);
   const [newAssignmentData, setNewAssignmentData] = useState({
@@ -19,12 +18,6 @@ function SubAssignment() {
     file: null,
   });
 
-  const handleViewSubmission = async (assignmentId) => {
-    const assignment = assignments.find((a) => a._id === assignmentId);
-    const newUrl = `/todo/${subId}/submission`;
-    navigate(newUrl, { state: { assignment } });
-  };
-
   useEffect(() => {
     const role = localStorage.getItem("role");
     setUserRole(role);
@@ -33,7 +26,7 @@ function SubAssignment() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://localhost:5000/todo/${subId}`,
+          `${baseUrl}/todo/${subId}`,
           {
             headers: {
               Authorization: token,
@@ -49,8 +42,7 @@ function SubAssignment() {
             expanded: false,
           })
         );
-        // console.log(modifiedAssignments)
-        setAssignments(modifiedAssignments);
+        setAssignments(modifiedAssignments.reverse()); // Reverse the order
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -84,7 +76,7 @@ function SubAssignment() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`http://localhost:5000/todo/${subId}/submit`, formData, {
+      await axios.post(`${baseUrl}/todo/${subId}/submit`, formData, {
         headers: {
           Authorization: token,
           "Content-Type": "multipart/form-data",
@@ -123,7 +115,7 @@ function SubAssignment() {
     formData.append("dueDate", newAssignmentData.dueDate);
 
     try {
-      await axios.post(`http://localhost:5000/todo/${subId}`, formData, {
+      await axios.post(`${baseUrl}/todo/${subId}`, formData, {
         headers: {
           Authorization: token,
           "Content-Type": "multipart/form-data",
@@ -154,35 +146,39 @@ function SubAssignment() {
     });
   };
 
-const handleViewAllSubmissions = async (assignmentId) => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.post(
-      `http://localhost:5000/todo/${subId}/submissions`,
-      {
-        assignmentId: assignmentId,
-      },
-      {
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
+  const handleViewSubmission = async (assignmentId) => {
+    const assignment = assignments.find((a) => a._id === assignmentId);
+    const newUrl = `/todo/${subId}/submission`;
+    navigate(newUrl, { state: { assignment } });
+  };
+
+  const handleViewAllSubmissions = async (assignmentId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `${baseUrl}/todo/${subId}/submissions`,
+        {
+          assignmentId: assignmentId,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    // Redirect to the /todo/{subId}/submissions URL
-    navigate(`/todo/${subId}/submissions`, {
-      state: { submissions: response.data },
-    });
-  } catch (error) {
-    console.error("Error fetching submissions:", error);
-  }
-};
-
-
+      // Redirect to the /todo/{subId}/submissions URL
+      navigate(`/todo/${subId}/submissions`, {
+        state: { submissions: response.data },
+      });
+    } catch (error) {
+      console.error("Error fetching submissions:", error);
+    }
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8 relative">
+    <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-semibold">Assignments</h1>
         {userRole === "Professor" && !newAssignmentFormVisible && (
@@ -195,11 +191,8 @@ const handleViewAllSubmissions = async (assignmentId) => {
         )}
       </div>
       {newAssignmentFormVisible && (
-        <div className="">
-          <form
-            onSubmit={handleNewAssignmentSubmit}
-            className="bg-white rounded-lg shadow-md p-6 mb-4  max-w-full"
-          >
+        <div className="bg-white rounded-lg shadow-md p-6 mb-4 max-w-lg mx-auto">
+          <form onSubmit={handleNewAssignmentSubmit}>
             <div className="mb-4">
               <label
                 htmlFor="title"
@@ -284,7 +277,7 @@ const handleViewAllSubmissions = async (assignmentId) => {
           </form>
         </div>
       )}
-      {reversedAssignments.map((assignment) => (
+      {assignments.map((assignment) => (
         <div
           key={assignment._id}
           className="bg-white rounded-lg shadow-md p-6 mb-4 relative"
@@ -318,10 +311,12 @@ const handleViewAllSubmissions = async (assignmentId) => {
                     </a>
                   ))}
               </div>
-              <p className="text-gray-600">Posted By: {assignment.postedBy}</p>
+              <p className="text-gray-600">
+                Posted By: {assignment.postedBy.name}
+              </p>
               {userRole === "Student" && (
-                <div className="flex items-center mt-4">
-                  <label className="inline-flex items-center bg-white rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-blue-500 hover:bg-blue-100 hover:border-blue-500 cursor-pointer mr-4">
+                <div className="flex flex-col sm:flex-row items-center mt-4 mb-4 ">
+                  <label className="inline-flex items-center bg-white rounded-lg border border-gray-300 shadow-sm px-4 py-2 text-blue-500 hover:bg-blue-100 hover:border-blue-500 cursor-pointer mr-4  ">
                     <svg
                       className="w-6 h-6 mr-2"
                       fill="none"
@@ -346,13 +341,13 @@ const handleViewAllSubmissions = async (assignmentId) => {
                     />
                   </label>
                   <button
-                    className="text-white bg-blue-500 hover:bg-blue-600 py-2 px-4 rounded-full mr-4"
+                    className="text-white bg-blue-500 hover:bg-blue-600 py-2 px-4 rounded-full mb-2 sm:mb-0 sm:mr-4"
                     onClick={() => handleSubmit(assignment._id)}
                   >
                     Submit
                   </button>
                   <button
-                    className="text-white bg-green-500 hover:bg-green-600 py-2 px-4 rounded-full mr-4"
+                    className="text-white bg-green-500 hover:bg-green-600 py-2 px-4 rounded-full mb-2 sm:mb-0 sm:mr-4"
                     onClick={() => handleViewSubmission(assignment._id)}
                   >
                     View My Submission
