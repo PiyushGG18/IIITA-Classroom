@@ -95,7 +95,7 @@ function SubjectInfo() {
 
           <div className="p-4 ">
             <Link to={`/attendance/${subId}`} className="block w-full">
-              <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 transition duration-300 ease-in-out">
+              <button className="w-full bg-blue-500 text-white py-2 rounded-lg p-4 hover:bg-blue-600 focus:outline-none focus:bg-blue-600 transition duration-300 ease-in-out">
                 Take Attendance
               </button>
             </Link>

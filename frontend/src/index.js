@@ -71,11 +71,11 @@ const router = createBrowserRouter([
         element: <SemPart/>
       },
       {
-        path:":subId/midsem",
+        path:":subId/midSem",
         element: (role==="Professor"?<GiveResults/>:<ViewResults/>)
       },
       {
-        path:":subId/endsem",
+        path:":subId/endSem",
         element: (role==="Professor"?<GiveResults/>:<ViewResults/>)
       },
     ]
