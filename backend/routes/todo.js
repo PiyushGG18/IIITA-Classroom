@@ -158,9 +158,12 @@ router.get('/:courseId', Authenticate, async (req, res) => {
     }
 });
 
-router.get('/:assignmentId/submissions', professorauthenticate ,async (req, res) => {
+router.get('/:courseId/submissions',professorauthenticate,async (req, res) => {
+    // console.log(req.body);
     try {
-        const { assignmentId } = req.params;
+        // console.log(req.body);
+        const { assignmentId } = req.body;
+        // console.log(assignmentId);
         const submissions = await Submission.find({ assignment: assignmentId })
         .populate('student', 'name') // Optional: Populate student details
         .exec();
@@ -171,19 +174,19 @@ router.get('/:assignmentId/submissions', professorauthenticate ,async (req, res)
 });
 
 
-router.get('/courses/:courseId/assignments', async (req, res) => {
-    const { courseId } = req.params;
+// router.get('/courses/:courseId/assignments', async (req, res) => {
+//     const { courseId } = req.params;
 
-    try {
-        const assignments = await Assignment.find({ course: courseId }).populate('postedBy', 'name');
-        if (!assignments.length) {
-            return res.status(404).send({ message: 'No assignments found for this course.' });
-        }
+//     try {
+//         const assignments = await Assignment.find({ course: courseId }).populate('postedBy', 'name');
+//         if (!assignments.length) {
+//             return res.status(404).send({ message: 'No assignments found for this course.' });
+//         }
 
-        res.status(200).send(assignments);
-    } catch (error) {
-        res.status(500).send({ message: 'Failed to retrieve assignments.', error: error.message });
-    }
-});
+//         res.status(200).send(assignments);
+//     } catch (error) {
+//         res.status(500).send({ message: 'Failed to retrieve assignments.', error: error.message });
+//     }
+// });
 
 module.exports = router;
