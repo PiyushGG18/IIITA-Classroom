@@ -49,6 +49,7 @@ function Login() {
         window.location.replace("/");
       })
       .catch((error) => {
+        alert("Please enter correct credentials");
         console.log(error.response);
       });
   }
