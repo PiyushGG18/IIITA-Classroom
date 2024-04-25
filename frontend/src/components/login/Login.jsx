@@ -4,6 +4,7 @@ import "./login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../Urls";
+import Swal from "sweetalert2";
 
 const Image4 = "/photos/Subjects/img4.jpg";
 
@@ -26,33 +27,38 @@ function Login() {
       setFormData({ ...formData, signIn: e.target.value });
     };
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    axios
-      .post(`${baseUrl}/user/login`, formData)
-      .then((response) => {
-        // console.log(response);
-        const newUser = {
-          user: response.data.user.name,
-          userImage: response.data.user.image,
-          userEmail: response.data.user.email,
-        };
-        localStorage.setItem("nuser", JSON.stringify(newUser));
-        const token=response.data.token;
-        localStorage.setItem('token',token);
-        const role = formData.signIn;
-        localStorage.setItem('role',role);
-        // console.log(response)
+function handleSubmit(e) {
+  e.preventDefault();
+  axios
+    .post(`${baseUrl}/user/login`, formData)
+    .then((response) => {
+      const newUser = {
+        user: response.data.user.name,
+        userImage: response.data.user.image,
+        userEmail: response.data.user.email,
+      };
+      localStorage.setItem("nuser", JSON.stringify(newUser));
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+      const role = formData.signIn;
+      localStorage.setItem("role", role);
 
-        setUser(newUser);
+      setUser(newUser);
 
-        window.location.replace("/");
-      })
-      .catch((error) => {
-        alert("Please enter correct credentials");
-        console.log(error.response);
+      window.location.replace("/");
+    })
+    .catch((error) => {
+      // Use SweetAlert2 for a beautiful alert
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please enter correct credentials!",
+        footer: "<a href>Need help?</a>", // Optionally provide a link or more info
       });
-  }
+      console.log(error.response);
+    });
+}
+
 
   const users = ["Student", "Professor", "Admin"];
 
